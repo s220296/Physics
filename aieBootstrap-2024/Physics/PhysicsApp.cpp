@@ -2,6 +2,8 @@
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
+#include "Gizmos.h"
+#include "glm/glm.hpp"
 
 PhysicsApp::PhysicsApp() {
 
@@ -17,7 +19,8 @@ bool PhysicsApp::startup() {
 
 	// TODO: remember to change this when redistributing a build!
 	// the following path would be used instead: "./font/consolas.ttf"
-	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
+	m_font = new aie::Font("./font/consolas_bold.ttf", 32);
+	m_texture = new aie::Texture("./textures/ship.png");
 
 	return true;
 }
@@ -48,9 +51,15 @@ void PhysicsApp::draw() {
 
 	// draw your stuff here!
 	
+	m_2dRenderer->setUVRect(0, 0, 1, 1);
+	m_2dRenderer->drawSprite(m_texture, 200, 200, 100, 100);
+
+
+
 	// output some text, uses the last used colour
 	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
 
 	// done drawing sprites
 	m_2dRenderer->end();
 }
+
