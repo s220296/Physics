@@ -72,8 +72,7 @@ bool PhysicsScene::Circle2Circle(PhysicsObject* obj1, PhysicsObject* obj2)
 
         if (glm::distance(circle1->GetPosition(), circle2->GetPosition()) < minDistance)
         {
-            circle1->ApplyForce(-circle1->GetVelocity());
-            circle2->ApplyForce(-circle2->GetVelocity());
+            circle1->ApplyForceToActor(circle2, circle1->GetVelocity() * (circle1->GetMass() / circle2->GetMass()));
         }
     }
 

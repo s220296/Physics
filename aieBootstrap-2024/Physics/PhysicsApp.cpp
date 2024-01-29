@@ -8,6 +8,7 @@
 #include "string"
 #include "PhysicsScene.h"
 #include "Demos.h"
+#include "Circle.h"
 
 PhysicsApp::PhysicsApp() {
 
@@ -57,6 +58,8 @@ void PhysicsApp::update(float deltaTime) {
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
+
+	DemoUpdate(input, deltaTime);
 }
 
 void PhysicsApp::draw() {
@@ -96,12 +99,42 @@ void PhysicsApp::draw() {
 void PhysicsApp::DemoStartUp(int num)
 {
 #ifdef NewtonsFirstLaw
-	int test = 0;
+	m_physicsScene->SetGravity(glm::vec2(0));
+
+	Circle* ball;
+	ball = new Circle(glm::vec2(-40, 0), glm::vec2(10, 30), 3.0f, 1, glm::vec4(1, 0, 0, 1));
+
+	m_physicsScene->AddActor(ball);
 #endif // NewtonsFirstLaw
+
+#ifdef NewtonsSecondLaw
+	m_physicsScene->SetGravity(glm::vec2(0, -10));
+
+	Circle* ball;
+	ball = new Circle(glm::vec2(-40, 0), glm::vec2(10, 30), 3.0f, 1, glm::vec4(1, 0, 0, 1));
+
+	m_physicsScene->AddActor(ball);
+#endif // NewtonsSecondLaw
+
+#ifdef NewtonsThirdLaw
+	m_physicsScene->SetGravity(glm::vec2(0));
+
+	Circle* ball1 = new Circle(glm::vec2(-20, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
+	Circle* ball2 = new Circle(glm::vec2(10, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(0, 1, 0, 1));
+
+	m_physicsScene->AddActor(ball1);
+	m_physicsScene->AddActor(ball2);
+
+	ball1->ApplyForce(glm::vec2(30, 0));
+	ball2->ApplyForce(glm::vec2(0, 0));
+
+#endif // NewtonsThirdLaw
+
 
 }
 
 void PhysicsApp::DemoUpdate(aie::Input* input, float dt)
 {
+	
 }
 
