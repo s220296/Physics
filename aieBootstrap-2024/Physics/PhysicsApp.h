@@ -3,6 +3,8 @@
 #include "Application.h"
 #include "Renderer2D.h"
 
+class PhysicsScene;
+
 class PhysicsApp : public aie::Application {
 public:
 
@@ -20,4 +22,5 @@ protected:
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
 	aie::Texture*		m_texture;
+	PhysicsScene*		m_physicsScene;
 };

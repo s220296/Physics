@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "string"
+#include "PhysicsScene.h"
 
 PhysicsApp::PhysicsApp() {
 
@@ -26,6 +27,10 @@ bool PhysicsApp::startup() {
 	m_font = new aie::Font("./font/consolas_bold.ttf", 32);
 	m_texture = new aie::Texture("./textures/ship.png");
 
+	// Implement PHysics scene
+	m_physicsScene = new PhysicsScene();
+	m_physicsScene->SetTimeStep(0.01f);
+
 	return true;
 }
 
@@ -41,6 +46,10 @@ void PhysicsApp::update(float deltaTime) {
 	aie::Input* input = aie::Input::getInstance();
 
 	aie::Gizmos::clear();
+
+	// impememt physics scene
+	m_physicsScene->Update(deltaTime);
+	m_physicsScene->Draw();
 
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
