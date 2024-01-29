@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "Renderer2D.h"
+#include "Input.h"
 
 class PhysicsScene;
 
@@ -23,4 +24,9 @@ protected:
 	aie::Font*			m_font;
 	aie::Texture*		m_texture;
 	PhysicsScene*		m_physicsScene;
+
+	// ===== For Demos Only =====
+public:
+	void DemoStartUp(int num);
+	void DemoUpdate(aie::Input* input, float dt);
 };

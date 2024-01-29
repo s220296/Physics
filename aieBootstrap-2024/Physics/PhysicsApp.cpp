@@ -7,6 +7,7 @@
 #include "glm/ext.hpp"
 #include "string"
 #include "PhysicsScene.h"
+#include "Demos.h"
 
 PhysicsApp::PhysicsApp() {
 
@@ -30,6 +31,8 @@ bool PhysicsApp::startup() {
 	// Implement PHysics scene
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->SetTimeStep(0.01f);
+
+	DemoStartUp(1);
 
 	return true;
 }
@@ -88,5 +91,17 @@ void PhysicsApp::draw() {
 
 	// done drawing sprites
 	m_2dRenderer->end();
+}
+
+void PhysicsApp::DemoStartUp(int num)
+{
+#ifdef NewtonsFirstLaw
+	int test = 0;
+#endif // NewtonsFirstLaw
+
+}
+
+void PhysicsApp::DemoUpdate(aie::Input* input, float dt)
+{
 }
 
