@@ -1,5 +1,5 @@
 #include "Rigidbody.h"
-#include "glm/glm.hpp"
+#include "iostream"
 
 Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position, 
 	glm::vec2 velocity, float orientation, float mass) : PhysicsObject(shapeID)
@@ -46,5 +46,16 @@ void Rigidbody::ResolveCollision(Rigidbody* actor2)
 
 	glm::vec2 force = normal * j;
 
+	float kePre = GetKineticEnergy() + actor2->GetKineticEnergy();
+
 	ApplyForceToActor(actor2, force); // -force changed to force
+
+	float kePost = GetKineticEnergy() + actor2->GetKineticEnergy();
+
+	float deltaKE = kePost - kePre;
+	if (deltaKE > kePost * 0.01f)
+	{
+		std::cout << "Kinetic Energy discrepancy greater than 1% detected";
+		std::cout << "kePost: " << kePost << " " << "kePre: " << kePre;
+	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PhysicsObject.h"
+#include "glm/glm.hpp"
 
 class Rigidbody : public PhysicsObject {
 public:
@@ -19,6 +20,7 @@ public:
     float GetMass() { return m_mass; }
 
     void ResolveCollision(Rigidbody* actor2);
+    float GetKineticEnergy() { return m_mass * glm::length(m_velocity) * glm::length(m_velocity) * 0.5f; }
 
 protected:
     glm::vec2 m_position;

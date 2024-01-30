@@ -4,6 +4,8 @@
 #include "glm/vec2.hpp"
 #include "glm/vec4.hpp"
 
+class Rigidbody;
+
 class Plane : public PhysicsObject
 {
 public:
@@ -17,6 +19,8 @@ public:
     glm::vec2 GetNormal() { return m_normal; }
     float GetDistance() { return m_distanceToOrigin; }
     glm::vec4 GetColor() { return m_color; }
+
+    void ResolveCollision(Rigidbody* actor2);
 
 protected:
     glm::vec2 m_normal;

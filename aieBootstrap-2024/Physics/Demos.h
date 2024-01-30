@@ -10,4 +10,5 @@
 
 // ===== porojectiles ======
 //#define ProjectileTest
-#define BilliardSim
+//#define BilliardSim
+#define NewtonsCradle
