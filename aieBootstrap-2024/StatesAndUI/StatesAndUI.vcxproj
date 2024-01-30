@@ -166,13 +166,16 @@
   <ItemGroup>
     <ClCompile Include="GamePlayScene.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="StatesAndUIApp.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EasyDraw.h" />
     <ClInclude Include="GamePlayScene.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameStateManager.h" />
+    <ClInclude Include="MenuScene.h" />
     <ClInclude Include="StatesAndUIApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

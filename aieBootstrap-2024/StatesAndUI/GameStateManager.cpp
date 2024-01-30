@@ -4,6 +4,7 @@
 GameStateManager::GameStateManager(GameScene* initialState)
 {
 	m_currentGameState = initialState;
+	m_gameStates.push_back(initialState);
 }
 
 GameStateManager::~GameStateManager()
@@ -18,13 +19,13 @@ GameStateManager::~GameStateManager()
 
 void GameStateManager::AddGameState(GameScene* state)
 {
-	if(state)
+	if (state)
 		m_gameStates.push_back(state);
 }
 
 void GameStateManager::DeleteGameState(GameScene* state)
 {
-	if (state && state != m_currentGameState)
+	if (state)
 		m_gameStates.erase(std::find(m_gameStates.begin(), m_gameStates.end(), state));
 }
 
@@ -32,9 +33,11 @@ void GameStateManager::ChangeGameState(const char* stateName)
 {
 	for (GameScene* scene : m_gameStates)
 	{
-		if (scene->GetSceneName() == stateName)
+		if (scene->GetSceneName() == stateName && scene != m_currentGameState)
 		{
+			m_currentGameState->Exit();
 			m_currentGameState = scene;
+			m_currentGameState->Enter();
 		}
 	}
 }

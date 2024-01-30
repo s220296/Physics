@@ -8,6 +8,7 @@
 #include "glm/ext.hpp"
 #include "GameStateManager.h"
 #include "GamePlayScene.h"
+#include "MenuScene.h"
 
 using glm::vec2;
 using glm::vec4;
@@ -25,6 +26,7 @@ bool StatesAndUIApp::startup() {
 	m_2dRenderer = new aie::Renderer2D();
 
 	m_gameStateManager = new GameStateManager(new GamePlayScene());
+	m_gameStateManager->AddGameState(new MenuScene());
 
 	// TODO: remember to change this when redistributing a build!
 	// the following path would be used instead: "./font/consolas.ttf"
@@ -50,6 +52,11 @@ void StatesAndUIApp::update(float deltaTime) {
 
 	m_gameStateManager->Update(deltaTime);
 
+	if (input->wasKeyPressed(aie::INPUT_KEY_Q))
+		m_gameStateManager->ChangeGameState("Menu");
+	if (input->wasKeyPressed(aie::INPUT_KEY_E))
+		m_gameStateManager->ChangeGameState("Gameplay");
+
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
@@ -74,6 +81,8 @@ void StatesAndUIApp::draw() {
 
 	// output some text, uses the last used colour
 	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
+
+	aie::Gizmos::clear();
 
 	// done drawing sprites
 	m_2dRenderer->end();
