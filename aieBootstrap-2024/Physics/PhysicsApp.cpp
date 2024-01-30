@@ -124,13 +124,13 @@ void PhysicsApp::DemoStartUp(int num)
 #ifdef NewtonsThirdLaw
 	m_physicsScene->SetGravity(glm::vec2(0));
 
-	Circle* ball1 = new Circle(glm::vec2(-20, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
+	Circle* ball1 = new Circle(glm::vec2(-20, 1), glm::vec2(0, 0), 8.0f, 4, glm::vec4(1, 0, 0, 1));
 	Circle* ball2 = new Circle(glm::vec2(10, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(0, 1, 0, 1));
 
 	m_physicsScene->AddActor(ball1);
 	m_physicsScene->AddActor(ball2);
 
-	ball1->ApplyForce(glm::vec2(30, 0));
+	ball1->ApplyForce(glm::vec2(70, 0));
 	ball2->ApplyForce(glm::vec2(0, 0));
 
 #endif // NewtonsThirdLaw
@@ -172,6 +172,10 @@ void PhysicsApp::DemoStartUp(int num)
 	m_physicsScene->AddActor(new Circle(startPos, velocity, 1, radius, glm::vec4(0, 1, 1, 1)));
 
 #endif // ProjectileTest
+
+#ifdef BilliardSim
+
+#endif // BilliardSim
 
 
 }
