@@ -10,6 +10,7 @@
 #include "Demos.h"
 #include "Circle.h"
 #include "Plane.h"
+#include <iostream>
 
 PhysicsApp::PhysicsApp() {
 
@@ -32,6 +33,7 @@ bool PhysicsApp::startup() {
 
 	// Implement PHysics scene
 	m_physicsScene = new PhysicsScene();
+	m_physicsScene->SetCurrentInstance(m_physicsScene);
 	m_physicsScene->SetTimeStep(0.01f);
 
 	DemoStartUp(1);
@@ -222,6 +224,20 @@ void PhysicsApp::DemoStartUp(int num)
 
 
 #endif // NewtonsCradle
+	
+#ifdef PotentialEnergyTest
+	using glm::vec2;
+	using glm::vec4;
+
+	m_physicsScene->SetGravity(vec2(0,- 9.f));
+	m_physicsScene->SetTimeStep(0.01f);
+
+	Circle* ball1 = new Circle(vec2(0, 20), vec2(0, 0), 6.f, 4.f, vec4(0, 0, 1, 1));
+	Plane* plane1 = new Plane(vec2(0, 1), 0, vec4(1, 1, 1, 1));
+
+	m_physicsScene->AddActor(ball1);
+	m_physicsScene->AddActor(plane1);
+#endif // PotentialEnergyTest
 
 
 }
@@ -251,6 +267,9 @@ void PhysicsApp::SetupContinuousDemo(glm::vec2 startPos, float inclination, floa
 
 void PhysicsApp::DemoUpdate(aie::Input* input, float dt)
 {
-	
+#ifdef TotalEnergyPrint
+	std::cout << m_physicsScene->GetTotalEnergy() << std::endl;
+#endif // TotalEnergyPrint
+
 }
 

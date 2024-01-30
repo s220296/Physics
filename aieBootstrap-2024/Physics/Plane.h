@@ -20,7 +20,7 @@ public:
     float GetDistance() { return m_distanceToOrigin; }
     glm::vec4 GetColor() { return m_color; }
 
-    void ResolveCollision(Rigidbody* actor2);
+    void ResolveCollision(Rigidbody* actor2, glm::vec2 contact);
 
 protected:
     glm::vec2 m_normal;

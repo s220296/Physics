@@ -10,21 +10,37 @@ public:
     ~Rigidbody();
 
     virtual void FixedUpdate(glm::vec2 gravity, float timeStep);
-    void ApplyForce(glm::vec2 force);
-    void ApplyForceToActor(Rigidbody* inputActor, glm::vec2 force);
+    void ApplyForce(glm::vec2 force, glm::vec2 pos);
 
     // So we can always get the values of our protected variables without tampering.
     glm::vec2 GetPosition() { return m_position; }
     float GetOrientatation() { return m_orientation; }
     glm::vec2 GetVelocity() { return m_velocity; }
     float GetMass() { return m_mass; }
+    float GetMoment() { return m_moment; }
 
-    void ResolveCollision(Rigidbody* actor2);
-    float GetKineticEnergy() { return m_mass * glm::length(m_velocity) * glm::length(m_velocity) * 0.5f; }
+    void ResolveCollision(Rigidbody* actor2, glm::vec2 contact, 
+        glm::vec2* collisionNormal=nullptr);
+
+    float GetKineticEnergy();
+    float GetGravitationalPotentialEnergy();
+    float GetEnergy() override { return GetKineticEnergy() + GetGravitationalPotentialEnergy(); }
+
+    void CalculateSmoothedPosition(float alpha);
 
 protected:
     glm::vec2 m_position;
     glm::vec2 m_velocity;
     float m_mass;
+    
     float m_orientation;    //2D so we only need a single float to represent our orientation
+    float m_lastOrientation;
+
+    float m_angularVelocity;
+    float m_moment;
+
+    glm::vec2 m_lastPosition;
+    glm::vec2 m_smoothedPosition;
+    glm::vec2 m_smoothedLocalX;
+    glm::vec2 m_smoothedLocalY;
 };

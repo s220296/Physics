@@ -15,6 +15,8 @@ static fn collisionFunctionArray[] =
 
 static const int SHAPE_COUNT = 2;
 
+static PhysicsScene* m_instance;
+
 PhysicsScene::PhysicsScene()
 {
 	m_timeStep = 0.01f;
@@ -27,6 +29,11 @@ PhysicsScene::~PhysicsScene()
     {
         delete pActor;
     }
+}
+
+void PhysicsScene::SetCurrentInstance(PhysicsScene* currentActiveInstance)
+{
+    m_instance = currentActiveInstance;
 }
 
 void PhysicsScene::Update(float dt) {
@@ -75,6 +82,22 @@ void PhysicsScene::Draw()
     }
 }
 
+glm::vec2 PhysicsScene::GetGravity()
+{
+    return m_instance->m_gravity;
+}
+
+float PhysicsScene::GetTotalEnergy()
+{
+    float total = 0;
+    for (auto it = m_actors.begin(); it != m_actors.end(); it++)
+    {
+        PhysicsObject* obj = *it;
+        total += obj->GetEnergy();
+    }
+    return total;
+}
+
 bool PhysicsScene::Plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 {
     return false;
@@ -99,7 +122,10 @@ bool PhysicsScene::Circle2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
         float velocityOutOfPlane = glm::dot(circle->GetVelocity(), plane->GetNormal());
         if (intersection > 0 && velocityOutOfPlane < 0)
         {
-            plane->ResolveCollision(circle);
+            glm::vec2 contact = circle->GetPosition() + 
+                (collisionNormal * -circle->GetRadius());
+
+            plane->ResolveCollision(circle, contact);
             return true;
         }
     }
@@ -122,7 +148,8 @@ bool PhysicsScene::Circle2Circle(PhysicsObject* obj1, PhysicsObject* obj2)
 
         if (glm::distance(circle1->GetPosition(), circle2->GetPosition()) < minDistance)
         {
-            circle1->ResolveCollision(circle2);
+            circle1->ResolveCollision(circle2, 0.5f * 
+                (circle1->GetPosition() + circle2->GetPosition()));
         }
     }
 
