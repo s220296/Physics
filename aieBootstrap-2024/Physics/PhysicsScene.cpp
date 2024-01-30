@@ -2,6 +2,18 @@
 #include "PhysicsObject.h"
 #include "Circle.h"
 #include "glm/glm.hpp"
+#include "Plane.h"
+
+// function pointer array for doing our collisions
+typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
+
+static fn collisionFunctionArray[] =
+{
+    PhysicsScene::Plane2Plane, PhysicsScene::Plane2Circle,
+    PhysicsScene::Circle2Plane, PhysicsScene::Circle2Circle,
+};
+
+static const int SHAPE_COUNT = 2;
 
 PhysicsScene::PhysicsScene()
 {
@@ -40,10 +52,17 @@ void PhysicsScene::Update(float dt) {
             {
                 PhysicsObject* object1 = m_actors[outer];
                 PhysicsObject* object2 = m_actors[inner];
+                int shapeId1 = object1->GetShapeID();
+                int shapeId2 = object2->GetShapeID();
 
-                // for now we can assume both shapes are Circles, 
-                // since that is all we’ve implemented for now.
-                Circle2Circle(object1, object2);
+                // using function pointers
+                int functionIdx = (shapeId1 * SHAPE_COUNT) + shapeId2;
+                fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
+                if (collisionFunctionPtr != nullptr)
+                {
+                    // did a collision occur?
+                    collisionFunctionPtr(object1, object2);
+                }
             }
         }
     }
@@ -54,6 +73,38 @@ void PhysicsScene::Draw()
     for (auto pActor : m_actors) {
         pActor->Draw(1);
     }
+}
+
+bool PhysicsScene::Plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+    return false;
+}
+
+bool PhysicsScene::Plane2Circle(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+    return Circle2Plane(obj2, obj1);
+}
+
+bool PhysicsScene::Circle2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+    Circle* circle = dynamic_cast<Circle*>(obj1);
+    Plane* plane = dynamic_cast<Plane*>(obj2);
+    //if we are successful then test for collision
+    if (circle != nullptr && plane != nullptr)
+    {
+        glm::vec2 collisionNormal = plane->GetNormal();
+        float sphereToPlane = glm::dot(circle->GetPosition(), plane->GetNormal()) - plane->GetDistance();
+
+        float intersection = circle->GetRadius() - sphereToPlane;
+        float velocityOutOfPlane = glm::dot(circle->GetVelocity(), plane->GetNormal());
+        if (intersection > 0 && velocityOutOfPlane < 0)
+        {
+            //set Circle velocity to zero here
+            circle->ApplyForce(-circle->GetVelocity() * circle->GetMass());
+            return true;
+        }
+    }
+    return false;
 }
 
 bool PhysicsScene::Circle2Circle(PhysicsObject* obj1, PhysicsObject* obj2)

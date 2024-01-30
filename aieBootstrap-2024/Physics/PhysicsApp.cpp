@@ -9,6 +9,7 @@
 #include "PhysicsScene.h"
 #include "Demos.h"
 #include "Circle.h"
+#include "Plane.h"
 
 PhysicsApp::PhysicsApp() {
 
@@ -130,6 +131,27 @@ void PhysicsApp::DemoStartUp(int num)
 
 #endif // NewtonsThirdLaw
 
+#ifdef PlaneBallTest
+
+	m_physicsScene->SetGravity(glm::vec2(0, -6));
+
+	Circle* ball1 = new Circle(glm::vec2(20, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
+	Circle* ball2 = new Circle(glm::vec2(10, 20), glm::vec2(0, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
+
+	m_physicsScene->AddActor(ball1);
+	m_physicsScene->AddActor(ball2);
+
+	ball1->ApplyForce(glm::vec2(-30, 0));
+	ball2->ApplyForce(glm::vec2(5, 20));
+
+	Plane* plane1 = new Plane(glm::vec2(0, 1), -10.f, glm::vec4(1,1,0,1));
+
+	m_physicsScene->AddActor(plane1);
+
+#endif // PlaneBallTest
+
+
+	
 
 }
 

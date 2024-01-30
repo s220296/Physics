@@ -4,8 +4,8 @@
 
 enum ShapeType {
     PLANE = 0,
-    CIRCLE,
-    BOX
+    CIRCLE
+    //,BOX
 };
 
 class PhysicsObject

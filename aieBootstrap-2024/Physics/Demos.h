@@ -3,4 +3,7 @@
 // ===== Tutorials 02 =====
 //#define NewtonsFirstLaw
 //#define NewtonsSecondLaw
-#define NewtonsThirdLaw
+//#define NewtonsThirdLaw
+
+// ===== planes ======
+#define PlaneBallTest
