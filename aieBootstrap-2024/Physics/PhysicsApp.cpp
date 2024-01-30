@@ -202,11 +202,11 @@ void PhysicsApp::DemoStartUp(int num)
 	m_physicsScene->SetGravity(vec2(0));
 	m_physicsScene->SetTimeStep(0.01f);
 
-	Circle* ball1 = new Circle(glm::vec2(-20, 0), glm::vec2(20, 0), 1.f, 4, glm::vec4(1, 1, 1, 1));
-	Circle* ball2 = new Circle(glm::vec2(20, 0), glm::vec2(0, 0), 1.f, 4, glm::vec4(1, 0, 0, 1));
+	Circle* ball1 = new Circle(glm::vec2(-16, 0), glm::vec2(20, 0), 1.f, 4, glm::vec4(1, 1, 1, 1));
+	Circle* ball2 = new Circle(glm::vec2(16, 0), glm::vec2(0, 0), 1.f, 4, glm::vec4(1, 0, 0, 1));
 	Circle* ball3 = new Circle(glm::vec2(0, 0), glm::vec2(0, 0), 1.f, 4, glm::vec4(1, 0, 0, 1));
-	Circle* ball4 = new Circle(glm::vec2(10, 0), glm::vec2(0, 0), 1.f, 4, glm::vec4(1, 0, 0, 1));
-	Circle* ball5 = new Circle(glm::vec2(-10, 0), glm::vec2(0, 0), 1.f, 4, glm::vec4(1, 0, 0, 1));
+	Circle* ball4 = new Circle(glm::vec2(8, 0), glm::vec2(0, 0), 1.f, 4, glm::vec4(1, 0, 0, 1));
+	Circle* ball5 = new Circle(glm::vec2(-8, 0), glm::vec2(0, 0), 1.f, 4, glm::vec4(1, 0, 0, 1));
 
 	Plane* plane1 = new Plane(vec2(1, 0), -28, glm::vec4(0, 1, 0, 1));
 	Plane* plane2 = new Plane(vec2(-1, 0), -28, glm::vec4(0, 1, 0, 1));
