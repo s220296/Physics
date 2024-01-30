@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Renderer2D.h"
 #include "Input.h"
+#include "glm/vec2.hpp"
 
 class PhysicsScene;
 
@@ -29,4 +30,5 @@ protected:
 public:
 	void DemoStartUp(int num);
 	void DemoUpdate(aie::Input* input, float dt);
+	void SetupContinuousDemo(glm::vec2 startPos, float inclination, float speed, float gravity);
 };

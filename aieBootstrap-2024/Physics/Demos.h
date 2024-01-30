@@ -6,4 +6,7 @@
 //#define NewtonsThirdLaw
 
 // ===== planes ======
-#define PlaneBallTest
+//#define PlaneBallTest
+
+// ===== porojectiles ======
+#define ProjectileTest

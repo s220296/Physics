@@ -50,7 +50,11 @@ void PhysicsApp::update(float deltaTime) {
 	// input example
 	aie::Input* input = aie::Input::getInstance();
 
+#ifndef ProjectileTest
 	aie::Gizmos::clear();
+
+#endif // !ProjectileTest
+
 
 	// impememt physics scene
 	m_physicsScene->Update(deltaTime);
@@ -151,8 +155,48 @@ void PhysicsApp::DemoStartUp(int num)
 #endif // PlaneBallTest
 
 
-	
+#ifdef ProjectileTest
 
+	SetupContinuousDemo(glm::vec2(-40, 0), 45, 40, -10);
+	
+	m_physicsScene->SetGravity(glm::vec2(0, -10));
+	m_physicsScene->SetTimeStep(0.001f);
+
+	float radius = 1.0f; float speed = 40.f;
+	glm::vec2 startPos(-40, 0);
+	float inclination = glm::pi<float>() / 4.0f;
+
+	glm::vec2 velocity(glm::cos((inclination)), glm::sin((inclination)));
+	velocity *= speed;
+
+	m_physicsScene->AddActor(new Circle(startPos, velocity, 1, radius, glm::vec4(0, 1, 1, 1)));
+
+#endif // ProjectileTest
+
+
+}
+
+void PhysicsApp::SetupContinuousDemo(glm::vec2 startPos, float inclination, float speed, float gravity)
+{
+	float t = 0;
+	float tStep = 0.5f;
+	float radius = 1.0f;
+	int segments = 12;
+	glm::vec4 color = glm::vec4(1, 1, 0, 1);
+
+	float xVel = glm::cos(glm::radians(inclination)) * speed;
+	float yVel = glm::sin(glm::radians(inclination)) * speed;
+
+	while (t <= 5)
+	{
+		// calculate the x, y position of the projectile at time t
+
+		float x = startPos.x + xVel * t;
+		float y = startPos.y + yVel * t + gravity * t * t * 0.5f;
+
+		aie::Gizmos::add2DCircle(glm::vec2(x, y), radius, segments, color);
+		t += tStep;
+	}
 }
 
 void PhysicsApp::DemoUpdate(aie::Input* input, float dt)
