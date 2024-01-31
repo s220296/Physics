@@ -10,7 +10,8 @@
 
 // ===== planes ======
 //#define PlaneBallTest
-#define PotentialEnergyTest
+//#define PotentialEnergyTest
+#define PlaneBoxTest
 
 // ===== porojectiles ======
 //#define ProjectileTest

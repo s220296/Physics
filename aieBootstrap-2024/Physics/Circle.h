@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Rigidbody.h"
-#include "glm/vec4.hpp"
 
 class Circle : public Rigidbody
 {

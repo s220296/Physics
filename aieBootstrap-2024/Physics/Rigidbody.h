@@ -12,12 +12,15 @@ public:
     virtual void FixedUpdate(glm::vec2 gravity, float timeStep);
     void ApplyForce(glm::vec2 force, glm::vec2 pos);
 
+    void CalculateAxes();
+
     // So we can always get the values of our protected variables without tampering.
     glm::vec2 GetPosition() { return m_position; }
     float GetOrientatation() { return m_orientation; }
     glm::vec2 GetVelocity() { return m_velocity; }
     float GetMass() { return m_mass; }
     float GetMoment() { return m_moment; }
+    float GetAngularVelocity() { return m_angularVelocity; }
 
     void ResolveCollision(Rigidbody* actor2, glm::vec2 contact, 
         glm::vec2* collisionNormal=nullptr);
@@ -27,6 +30,9 @@ public:
     float GetEnergy() override { return GetKineticEnergy() + GetGravitationalPotentialEnergy(); }
 
     void CalculateSmoothedPosition(float alpha);
+
+    glm::vec2 GetLocalX() { return m_localX; }
+    glm::vec2 GetLocalY() { return m_localY; }
 
 protected:
     glm::vec2 m_position;
@@ -43,4 +49,8 @@ protected:
     glm::vec2 m_smoothedPosition;
     glm::vec2 m_smoothedLocalX;
     glm::vec2 m_smoothedLocalY;
+
+    //store the local x,y axes of the box based on its angle of rotation
+    glm::vec2 m_localX;
+    glm::vec2 m_localY;
 };

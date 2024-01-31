@@ -3,9 +3,9 @@
 #include "glm/vec2.hpp"
 
 enum ShapeType {
-    PLANE = 0,
-    CIRCLE
-    //,BOX
+    PLANE = 0
+    , CIRCLE
+    , BOX
 };
 
 class PhysicsObject

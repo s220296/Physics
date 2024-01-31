@@ -6,11 +6,19 @@ Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position,
 	glm::vec2 velocity, float orientation, float mass) : PhysicsObject(shapeID)
 {
 	m_position = position;	
+	m_lastPosition = position;
+
 	m_velocity = velocity;
+
 	m_orientation = orientation; 
+	m_lastOrientation = orientation;
+
 	m_mass = mass;
 	m_angularVelocity = 0.f;
 	m_moment = 0.f;
+
+	m_localX = glm::vec2(0);
+	m_localY = glm::vec2(0);
 }
 
 Rigidbody::~Rigidbody()
@@ -24,6 +32,7 @@ void Rigidbody::FixedUpdate(glm::vec2 gravity, float timeStep)
 	m_position += m_velocity * timeStep;
 	ApplyForce(gravity * m_mass * timeStep, GetPosition());
 
+	m_lastOrientation = m_orientation;
 	m_orientation += m_angularVelocity * timeStep;
 }
 
@@ -31,6 +40,15 @@ void Rigidbody::ApplyForce(glm::vec2 force, glm::vec2 pos)
 {
 	m_velocity += force / GetMass();
 	m_angularVelocity += (force.y * pos.x - force.x * pos.y) / GetMoment();
+}
+
+void Rigidbody::CalculateAxes()
+{
+	float sn = sinf(m_orientation);
+	float cs = cosf(m_orientation);
+
+	m_localX = glm::vec2(cs, sn);
+	m_localY = glm::vec2(-sn, cs);
 }
 
 void Rigidbody::ResolveCollision(Rigidbody* actor2, glm::vec2 contact,
@@ -88,8 +106,10 @@ void Rigidbody::CalculateSmoothedPosition(float alpha)
 
 	float smoothedOrientation = alpha * m_orientation
 		+ (1 - alpha) * m_lastOrientation;
+
 	float sn = sinf(smoothedOrientation);
 	float cs = cosf(smoothedOrientation);
+
 	m_smoothedLocalX = glm::vec2(cs, sn);
 	m_smoothedLocalY = glm::vec2(-sn, cs);
 }

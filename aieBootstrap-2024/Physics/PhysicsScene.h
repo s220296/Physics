@@ -31,6 +31,12 @@ public:
 	static bool Plane2Circle(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Circle2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Circle2Circle(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Box2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Box2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Plane2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Circle2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Box2Circle(PhysicsObject* obj1, PhysicsObject* obj2);
+	
 
 protected:
 	glm::vec2 m_gravity;

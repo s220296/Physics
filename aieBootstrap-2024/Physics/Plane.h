@@ -1,8 +1,7 @@
 #pragma once
 
 #include "PhysicsObject.h"
-#include "glm/vec2.hpp"
-#include "glm/vec4.hpp"
+#include "glm/glm.hpp"
 
 class Rigidbody;
 

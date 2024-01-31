@@ -10,6 +10,8 @@
 #include "Demos.h"
 #include "Circle.h"
 #include "Plane.h"
+#include "Box.h"
+
 #include <iostream>
 
 PhysicsApp::PhysicsApp() {
@@ -238,6 +240,23 @@ void PhysicsApp::DemoStartUp(int num)
 	m_physicsScene->AddActor(ball1);
 	m_physicsScene->AddActor(plane1);
 #endif // PotentialEnergyTest
+
+#ifdef PlaneBoxTest
+	using glm::vec2;
+
+	m_physicsScene->SetGravity(vec2(0, -9.f));
+	m_physicsScene->SetTimeStep(0.01f);
+
+	Box* box1 = new Box(vec2(10, 10), vec2(0, 0), 5.f, vec2(2.f, 2.f), 0, glm::vec4(1, 1, 0, 1));
+	Plane* plane1 = new Plane(vec2(0, 1), 0, glm::vec4(1, 1, 1, 1));
+	Circle* ball1 = new Circle(vec2(0, 20), vec2(0, 0), 6.f, 4.f, glm::vec4(0, 0, 1, 1));
+	
+	m_physicsScene->AddActor(ball1);
+	m_physicsScene->AddActor(box1);
+	m_physicsScene->AddActor(plane1);
+
+#endif // PlaneBoxTest
+
 
 
 }
