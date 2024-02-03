@@ -6,7 +6,7 @@
 //#define NewtonsThirdLaw
 
 // ===== Debug ======
-//#define TotalEnergyPrint
+#define TotalEnergyPrint
 
 // ===== planes ======
 //#define PlaneBallTest

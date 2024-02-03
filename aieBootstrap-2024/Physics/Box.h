@@ -11,10 +11,13 @@ public:
 
 	virtual void Draw(float alpha);
 
-	glm::vec2 GetExtents() { return m_extents; }
-	float GetWidth() { return m_extents.x * 2; }
-	float GetHeight() { return m_extents.y * 2; }
+	glm::vec2 GetExtents() const { return m_extents; }
+	float GetWidth() const { return m_extents.x * 2; }
+	float GetHeight() const { return m_extents.y * 2; }
 
+	bool CheckBoxCorners(const Box& box, glm::vec2& contact, int& numContacts,
+		float& pen, glm::vec2& edgeNormal);
+		
 protected:
 	glm::vec4 m_color;
 

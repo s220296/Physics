@@ -27,10 +27,12 @@ Rigidbody::~Rigidbody()
 
 void Rigidbody::FixedUpdate(glm::vec2 gravity, float timeStep)
 {
+	CalculateAxes();
+
 	m_lastPosition = m_position;
 	
 	m_position += m_velocity * timeStep;
-	ApplyForce(gravity * m_mass * timeStep, GetPosition());
+	ApplyForce(gravity * m_mass * timeStep, glm::vec2(0));
 
 	m_lastOrientation = m_orientation;
 	m_orientation += m_angularVelocity * timeStep;
@@ -92,7 +94,8 @@ void Rigidbody::ResolveCollision(Rigidbody* actor2, glm::vec2 contact,
 
 float Rigidbody::GetKineticEnergy()
 {
-	return m_mass * glm::length(m_velocity) * glm::length(m_velocity) * 0.5f;
+	return 0.5f * (m_mass * glm::dot(m_velocity, m_velocity) + 
+		m_moment * m_angularVelocity * m_angularVelocity);
 }
 
 float Rigidbody::GetGravitationalPotentialEnergy()

@@ -15,12 +15,12 @@ public:
     void CalculateAxes();
 
     // So we can always get the values of our protected variables without tampering.
-    glm::vec2 GetPosition() { return m_position; }
-    float GetOrientatation() { return m_orientation; }
-    glm::vec2 GetVelocity() { return m_velocity; }
-    float GetMass() { return m_mass; }
-    float GetMoment() { return m_moment; }
-    float GetAngularVelocity() { return m_angularVelocity; }
+    glm::vec2 GetPosition() const { return m_position; }
+    float GetOrientatation() const { return m_orientation; }
+    glm::vec2 GetVelocity() const { return m_velocity; }
+    float GetMass() const { return m_mass; }
+    float GetMoment() const { return m_moment; }
+    float GetAngularVelocity() const { return m_angularVelocity; }
 
     void ResolveCollision(Rigidbody* actor2, glm::vec2 contact, 
         glm::vec2* collisionNormal=nullptr);
@@ -31,8 +31,8 @@ public:
 
     void CalculateSmoothedPosition(float alpha);
 
-    glm::vec2 GetLocalX() { return m_localX; }
-    glm::vec2 GetLocalY() { return m_localY; }
+    glm::vec2 GetLocalX() const { return m_localX; }
+    glm::vec2 GetLocalY() const { return m_localY; }
 
 protected:
     glm::vec2 m_position;
@@ -46,6 +46,7 @@ protected:
     float m_moment;
 
     glm::vec2 m_lastPosition;
+
     glm::vec2 m_smoothedPosition;
     glm::vec2 m_smoothedLocalX;
     glm::vec2 m_smoothedLocalY;
