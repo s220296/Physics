@@ -306,7 +306,38 @@ void PhysicsApp::DemoStartUp(int num)
 	m_physicsScene->AddActor(ball7);
 
 	circleStore1 = ball1;
+	ball5->SetKinematic(true);
 #endif // BilliardsTest1
+
+#ifdef BilliardsTest2
+
+	Box* box1 = new Box(glm::vec2(30, 0), glm::vec2(0), 1, glm::vec2(5, 5), 45, glm::vec4(1, 1, 0, 1));
+	Box* box2 = new Box(glm::vec2(30, 20), glm::vec2(0, -10), 1, glm::vec2(5, 5), 45, glm::vec4(1, 1, 0, 1));
+
+	box1->SetKinematic(true);
+
+	Circle* ball1 = new Circle(glm::vec2(-30, 0), glm::vec2(30, 0), 1, 5, glm::vec4(1, 0, 0, 1));
+	m_physicsScene->SetGravity(glm::vec2(0, -20));
+
+	m_physicsScene->AddActor(box1);
+	m_physicsScene->AddActor(box2);
+	m_physicsScene->AddActor(ball1);
+
+	float height = Application::getWindowHeight() / 15;
+	float width = Application::getWindowWidth() / 15;
+
+	glm::vec4 color = glm::vec4(1, 1, 0, 1);
+	Plane* topWall = new Plane(glm::vec2(0, -1), -height, color);
+	Plane* bottomWall = new Plane(glm::vec2(.25, 1), -height / 2, color);
+	Plane* leftWall = new Plane(glm::vec2(1, 0), -width, color);
+	Plane* rightWall = new Plane(glm::vec2(-1, 0), -width, color);
+
+	m_physicsScene->AddActor(topWall);
+	m_physicsScene->AddActor(bottomWall);
+	m_physicsScene->AddActor(leftWall);
+	m_physicsScene->AddActor(rightWall);
+
+#endif // BilliardsTest2
 
 
 }

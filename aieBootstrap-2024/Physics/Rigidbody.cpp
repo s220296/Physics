@@ -24,6 +24,8 @@ Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position,
 	m_angularDrag = 0.3f;
 
 	m_isKinematic = false;
+
+	CalculateAxes();
 }
 
 Rigidbody::~Rigidbody()
@@ -39,6 +41,7 @@ void Rigidbody::FixedUpdate(glm::vec2 gravity, float timeStep)
 
 		return;
 	}
+
 	CalculateAxes();
 
 	m_lastPosition = m_position;
@@ -69,8 +72,8 @@ void Rigidbody::CalculateAxes()
 	float sn = sinf(m_orientation);
 	float cs = cosf(m_orientation);
 
-	m_localX = glm::vec2(cs, sn);
-	m_localY = glm::vec2(-sn, cs);
+	m_localX = glm::normalize(glm::vec2(cs, sn));
+	m_localY = glm::normalize(glm::vec2(-sn, cs));
 }
 
 void Rigidbody::ResolveCollision(Rigidbody* actor2, glm::vec2 contact,

@@ -19,4 +19,5 @@
 //#define NewtonsCradle
 
 // ===== Billiards sim =====
-#define BilliardsTest1
+//#define BilliardsTest1
+#define BilliardsTest2
