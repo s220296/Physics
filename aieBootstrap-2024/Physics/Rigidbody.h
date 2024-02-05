@@ -3,6 +3,9 @@
 #include "PhysicsObject.h"
 #include "glm/glm.hpp"
 
+#define MIN_LINEAR_THRESHOLD 0.1f
+#define MIN_ANGULAR_THRESHOLD 0.01f
+
 class Rigidbody : public PhysicsObject {
 public:
     Rigidbody(ShapeType shapeID, glm::vec2 position,
@@ -34,6 +37,9 @@ public:
     glm::vec2 GetLocalX() const { return m_localX; }
     glm::vec2 GetLocalY() const { return m_localY; }
 
+    void SetLinearDrag(float linearDrag) { m_linearDrag = linearDrag; }
+    void SetAngularDrag(float angularDrag) { m_angularDrag = angularDrag; }
+
 protected:
     glm::vec2 m_position;
     glm::vec2 m_velocity;
@@ -54,4 +60,7 @@ protected:
     //store the local x,y axes of the box based on its angle of rotation
     glm::vec2 m_localX;
     glm::vec2 m_localY;
+
+    float m_linearDrag; // 0 to 1
+    float m_angularDrag; // 0 to 1
 };

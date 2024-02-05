@@ -247,15 +247,23 @@ void PhysicsApp::DemoStartUp(int num)
 	m_physicsScene->SetGravity(vec2(0, -9.f));
 	m_physicsScene->SetTimeStep(0.01f);
 
-	Box* box1 = new Box(vec2(10, 20), vec2(0, 0), 5.f, vec2(2.f, 2.f), 0.f, glm::vec4(1, 1, 0, 1));
-	Box* box2 = new Box(vec2(11, 10), vec2(0, 0), 5.f, vec2(2.f, 2.f), 0.f, glm::vec4(1, 1, 0, 1));
+	Box* box1 = new Box(vec2(10, 20), vec2(0, 5), 5.f, vec2(2.f, 2.f), 0.f, glm::vec4(1, 1, 0, 1));
+	Box* box2 = new Box(vec2(11, 10), vec2(10, 0), 5.f, vec2(2.f, 2.f), 0.f, glm::vec4(1, 1, 0, 1));
+	Box* box3 = new Box(vec2(10, 30), vec2(0, 20), 5.f, vec2(2.f, 2.f), 0.f, glm::vec4(1, 1, 0, 1));
 	Plane* plane1 = new Plane(vec2(0, 1), 0, glm::vec4(1, 1, 1, 1));
+	Plane* plane2 = new Plane(vec2(0.3, -0.7), -40, glm::vec4(1, 1, 1, 1));
+	Plane* plane3 = new Plane(vec2(-1, 0), -20, glm::vec4(1, 1, 1, 1));
 	Circle* ball1 = new Circle(vec2(0, 20), vec2(0, 0), 6.f, 4.f, glm::vec4(0, 0, 1, 1));
+	Circle* ball2 = new Circle(vec2(-20, 20), vec2(-10, 0), 3.f, 3.f, glm::vec4(0, 0, 1, 1));
 	
 	m_physicsScene->AddActor(ball1);
+	m_physicsScene->AddActor(ball2);
 	m_physicsScene->AddActor(box1);
 	m_physicsScene->AddActor(box2);
+	m_physicsScene->AddActor(box3);
 	m_physicsScene->AddActor(plane1);
+	m_physicsScene->AddActor(plane2);
+	m_physicsScene->AddActor(plane3);
 
 #endif // PlaneBoxTest
 
