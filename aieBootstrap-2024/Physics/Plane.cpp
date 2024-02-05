@@ -3,6 +3,7 @@
 #include "glm/glm.hpp"
 #include "Rigidbody.h"
 #include "iostream"
+#include "PhysicsScene.h"
 
 Plane::Plane(glm::vec2 normal, float distance, glm::vec4 color) : PhysicsObject(PLANE)
 {
@@ -25,7 +26,7 @@ void Plane::ResolveCollision(Rigidbody* actor2, glm::vec2 contact)
 	float velocityIntoPlane = glm::dot(vRel, m_normal);
 
 	// perfectly elasticity collisions for now
-	float e = 1;
+	float e = (GetElasticity() + actor2->GetElasticity()) / 2.0f;
 
 	// this is the perpendicular distance we apply the force at relative to the COM, so Torque = F*r
 	float r = glm::dot(localContact, glm::vec2(m_normal.y, -m_normal.x));
@@ -39,15 +40,22 @@ void Plane::ResolveCollision(Rigidbody* actor2, glm::vec2 contact)
 
 	glm::vec2 force = m_normal * j;
 
-	float kePre = actor2->GetKineticEnergy();
+	//float kePre = actor2->GetKineticEnergy();
 
 	actor2->ApplyForce(force, contact - actor2->GetPosition());
 
+	float pen = glm::dot(contact, m_normal) - m_distanceToOrigin;
+	PhysicsScene::ApplyContactForces(actor2, nullptr, m_normal, pen);
+
+	/*
+	
 	float kePost = actor2->GetKineticEnergy();
 
 	float deltaKE = kePost - kePre;
 	if (deltaKE > kePost * 0.01f)
 		std::cout << "Kinetic Energy discrepancy greater than 1% detected!!";
+
+		*/
 }
 
 void Plane::FixedUpdate(glm::vec2 gravity, float timeStep)

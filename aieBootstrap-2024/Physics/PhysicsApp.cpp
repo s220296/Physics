@@ -84,7 +84,7 @@ void PhysicsApp::draw() {
 	m_2dRenderer->setUVRect(0, 0, 1, 1);
 	m_2dRenderer->drawSprite(m_texture, 200, 200, 100, 100);
 
-	aie::Gizmos::add2DCircle(glm::vec2(0), 3.f, 15, glm::vec4(1));
+	//aie::Gizmos::add2DCircle(glm::vec2(0), 3.f, 15, glm::vec4(1));
 
 	static float aspectRatio = 16.f / 9.f;
 	aie::Gizmos::draw2D(glm::ortho<float>(-100, 100, 
@@ -104,6 +104,8 @@ void PhysicsApp::draw() {
 	// done drawing sprites
 	m_2dRenderer->end();
 }
+
+Circle* circleStore1;
 
 void PhysicsApp::DemoStartUp(int num)
 {
@@ -253,9 +255,12 @@ void PhysicsApp::DemoStartUp(int num)
 	Plane* plane1 = new Plane(vec2(0, 1), 0, glm::vec4(1, 1, 1, 1));
 	Plane* plane2 = new Plane(vec2(0.3, -0.7), -40, glm::vec4(1, 1, 1, 1));
 	Plane* plane3 = new Plane(vec2(-1, 0), -20, glm::vec4(1, 1, 1, 1));
-	Circle* ball1 = new Circle(vec2(0, 20), vec2(0, 0), 6.f, 4.f, glm::vec4(0, 0, 1, 1));
+	Circle* ball1 = new Circle(vec2(0, 20), vec2(0, -10), 6.f, 4.f, glm::vec4(0, 0, 1, 1));
 	Circle* ball2 = new Circle(vec2(-20, 20), vec2(-10, 0), 3.f, 3.f, glm::vec4(0, 0, 1, 1));
 	
+	ball1->SetElasticity(0.3f);
+	ball2->SetElasticity(0.5f);
+
 	m_physicsScene->AddActor(ball1);
 	m_physicsScene->AddActor(ball2);
 	m_physicsScene->AddActor(box1);
@@ -267,6 +272,41 @@ void PhysicsApp::DemoStartUp(int num)
 
 #endif // PlaneBoxTest
 
+#ifdef BilliardsTest1
+	using glm::vec2;
+	using glm::vec4;
+
+	m_physicsScene->SetGravity(glm::vec2(0.f));
+	m_physicsScene->SetTimeStep(0.01f);
+
+	Plane* plane1 = new Plane(vec2(1, 0), -80, vec4(1, 1, 1, 1));
+	Plane* plane2 = new Plane(vec2(-1, -0), -80, vec4(1, 1, 1, 1));
+	Plane* plane3 = new Plane(vec2(0, 1), -40, vec4(1, 1, 1, 1));
+	Plane* plane4 = new Plane(vec2(0, -1), -40, vec4(1, 1, 1, 1));
+
+	m_physicsScene->AddActor(plane1);
+	m_physicsScene->AddActor(plane2);
+	m_physicsScene->AddActor(plane3);
+	m_physicsScene->AddActor(plane4);
+
+	Circle* ball1 = new Circle(vec2(-40, 0), vec2(0), 3.f, 3.f, vec4(1));
+	Circle* ball2 = new Circle(vec2(20, 0), vec2(0), 3.f, 3.f, vec4(1, 0, 1, 1));
+	Circle* ball3 = new Circle(vec2(27, 5), vec2(0), 3.f, 3.f, vec4(1, 0, 1, 1));
+	Circle* ball4 = new Circle(vec2(27, -5), vec2(0), 3.f, 3.f, vec4(1, 0, 1, 1));
+	Circle* ball5 = new Circle(vec2(34, 10), vec2(0), 3.f, 3.f, vec4(1, 0, 1, 1));
+	Circle* ball6 = new Circle(vec2(34, -10), vec2(0), 3.f, 3.f, vec4(1, 0, 1, 1));
+	Circle* ball7 = new Circle(vec2(34, 0), vec2(0), 3.f, 3.f, vec4(1, 0, 1, 1));
+
+	m_physicsScene->AddActor(ball1);
+	m_physicsScene->AddActor(ball2);
+	m_physicsScene->AddActor(ball3);
+	m_physicsScene->AddActor(ball4);
+	m_physicsScene->AddActor(ball5);
+	m_physicsScene->AddActor(ball6);
+	m_physicsScene->AddActor(ball7);
+
+	circleStore1 = ball1;
+#endif // BilliardsTest1
 
 
 }
@@ -299,6 +339,12 @@ void PhysicsApp::DemoUpdate(aie::Input* input, float dt)
 #ifdef TotalEnergyPrint
 	std::cout << m_physicsScene->GetTotalEnergy() << std::endl;
 #endif // TotalEnergyPrint
+
+#ifdef BilliardsTest1
+	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
+		circleStore1->ApplyForce(glm::vec2(20, 0), glm::vec2(0));
+#endif // BilliardsTest1
+
 
 }
 

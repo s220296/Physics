@@ -84,6 +84,17 @@ void PhysicsScene::Draw()
     }
 }
 
+void PhysicsScene::ApplyContactForces(Rigidbody* body1, Rigidbody* body2, glm::vec2 norm, float pen)
+{
+    float body2Mass = body2 ? body2->GetMass() : INT_MAX;
+    float body1Factor = body2Mass / (body1->GetMass() + body2Mass);
+
+    body1->SetPosition(body1->GetPosition() - body1Factor * norm * pen);
+
+    if (body2)
+        body2->SetPosition(body2->GetPosition() + (1 - body1Factor) * norm * pen);
+}
+
 glm::vec2 PhysicsScene::GetGravity()
 {
     return m_instance->m_gravity;
@@ -142,16 +153,16 @@ bool PhysicsScene::Circle2Circle(PhysicsObject* obj1, PhysicsObject* obj2)
     // if we are successful then test for collision
     if (circle1 != nullptr && circle2 != nullptr)
     {
-        // TODO do the necessary maths in here
+        float dist = glm::distance(circle1->GetPosition(), circle2->GetPosition());
 
-        float minDistance = circle1->GetRadius() + circle2->GetRadius();
+        float penetration = circle1->GetRadius() + circle2->GetRadius() - dist;
 
-        // TODO if the Circles touch, set their velocities to zero for now
-
-        if (glm::distance(circle1->GetPosition(), circle2->GetPosition()) < minDistance)
+        if(penetration > 0)
         {
             circle1->ResolveCollision(circle2, 0.5f * 
-                (circle1->GetPosition() + circle2->GetPosition()));
+                (circle1->GetPosition() + circle2->GetPosition()), nullptr, penetration);
+
+            return true;
         }
     }
 
@@ -178,10 +189,10 @@ bool PhysicsScene::Box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
         }
         if (pen > 0)
         {
-            box1->ResolveCollision(box2, contact / float(numContacts), &norm);
+            box1->ResolveCollision(box2, contact / float(numContacts), &norm, pen);
+            return true;
         }
 
-        return true;
     }
 
     return false;
@@ -280,12 +291,15 @@ bool PhysicsScene::Box2Circle(PhysicsObject* obj1, PhysicsObject* obj2)
             closestPointOnBoxBox.x * box->GetLocalX() + 
             closestPointOnBoxBox.y * box->GetLocalY();
         glm::vec2 circleToBox = circle->GetPosition() - closestPointOnBoxWorld;
+        float penetration = circle->GetRadius() - glm::length(circleToBox);
 
-        if (glm::length(circleToBox) < circle->GetRadius())
+        if (penetration > 0)
         {
             glm::vec2 direction = glm::normalize(circleToBox);
             glm::vec2 contact = closestPointOnBoxWorld;
-            box->ResolveCollision(circle, contact, &direction);
+            box->ResolveCollision(circle, contact, &direction, penetration);
+
+            return true;
         }
     }
 

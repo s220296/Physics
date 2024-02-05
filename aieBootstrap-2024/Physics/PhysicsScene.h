@@ -4,6 +4,7 @@
 #include "vector"
 
 class PhysicsObject;
+class Rigidbody;
 
 class PhysicsScene
 {
@@ -17,6 +18,8 @@ public:
 	void RemoveActor(PhysicsObject* actor);
 	void Update(float dt);
 	void Draw();
+
+	static void ApplyContactForces(Rigidbody* body1, Rigidbody* body2, glm::vec2 norm, float pen);
 
 	void SetGravity(const glm::vec2 gravity) { m_gravity = gravity; }
 	//glm::vec2 GetGravity() const { return m_gravity; }

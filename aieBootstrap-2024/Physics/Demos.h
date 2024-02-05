@@ -6,14 +6,17 @@
 //#define NewtonsThirdLaw
 
 // ===== Debug ======
-#define TotalEnergyPrint
+//#define TotalEnergyPrint
 
 // ===== planes ======
 //#define PlaneBallTest
 //#define PotentialEnergyTest
-#define PlaneBoxTest
+//#define PlaneBoxTest
 
 // ===== porojectiles ======
 //#define ProjectileTest
 //#define BilliardSim
 //#define NewtonsCradle
+
+// ===== Billiards sim =====
+#define BilliardsTest1

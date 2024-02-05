@@ -20,6 +20,7 @@ public:
     virtual ShapeType GetShapeID() { return m_shapeID; }
     virtual float GetEnergy() { return 0; }
     virtual float GetElasticity() { return m_elasticity; }
+    virtual void SetElasticity(float elasticity) { m_elasticity = elasticity; }
 
 protected:
     ShapeType m_shapeID;
