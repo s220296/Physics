@@ -124,3 +124,17 @@ bool Box::CheckBoxCorners(const Box& box, glm::vec2& contact, int& numContacts,
 
 	return res;
 }
+
+bool Box::IsInside(glm::vec2 point)
+{
+	glm::vec2 min = glm::vec2(m_position.x - m_extents.x, m_position.y - m_extents.y);
+	glm::vec2 max = glm::vec2(m_position.x + m_extents.x, m_position.y + m_extents.y);
+
+	if (point.x > min.x && point.x < max.x &&
+		point.y > min.y && point.y < max.y)
+	{
+		return true;
+	}
+
+	return false;
+}

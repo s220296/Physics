@@ -2,8 +2,9 @@
 #include "Circle.h"
 #include "PhysicsScene.h"
 #include "Spring.h"
+#include "Box.h"
 
-void SoftBody::Build(PhysicsScene* scene, glm::vec2 position, float damping, float springForce, float spacing, std::vector<std::string>& strings)
+void SoftBody::CircleBuild(PhysicsScene* scene, glm::vec2 position, float damping, float springForce, float spacing, std::vector<std::string>& strings)
 {
 	int numColumns = strings.size();
 	int numRows = strings[0].length();
@@ -65,6 +66,81 @@ void SoftBody::Build(PhysicsScene* scene, glm::vec2 position, float damping, flo
 			Circle* s22 = (!endOfI && !endOfJ) ? circles[(i + 1) * numColumns + (j + 1)] : nullptr;
 			Circle* s02 = !endOfJ ? circles[(i - 1) * numColumns + (j + 1)] : nullptr;
 			Circle* s20 = !endOfI ? circles[(i + 1) * numColumns + j - 1] : nullptr;
+
+			if (s22 && s02)
+				scene->AddActor(new Spring(s22, s02, springForce, damping, spacing * 2));
+			if (s22 && s20)
+				scene->AddActor(new Spring(s22, s20, springForce, damping, spacing * 2));
+			if (s00 && s02)
+				scene->AddActor(new Spring(s00, s02, springForce, damping, spacing * 2));
+			if (s00 && s20)
+				scene->AddActor(new Spring(s00, s20, springForce, damping, spacing * 2));
+		}
+	}
+}
+
+void SoftBody::BoxBuild(PhysicsScene* scene, glm::vec2 position, float damping, float springForce, float spacing, std::vector<std::string>& strings)
+{
+	int numColumns = strings.size();
+	int numRows = strings[0].length();
+
+	// traverse across the array and add balls where the ascii art says they should be
+	Box** circles = new Box * [numRows * numColumns];
+
+	for (int i = 0; i < numRows; i++)
+	{
+		for (int j = 0; j < numColumns; j++)
+		{
+			if (strings[j][i] == '0')
+			{
+				circles[i * numColumns + j] =
+					new Box(position + glm::vec2(i, j) * spacing,// pos
+						glm::vec2(0, 0), 1.0f, glm::vec2(2.f, 2.f), 0, glm::vec4(1, 0, 0, 1));
+				scene->AddActor(circles[i * numColumns + j]);
+			}
+			else
+			{
+				circles[i * numColumns + j] = nullptr;
+			}
+		}
+	}
+
+	// second pass - add springs in
+	for (int i = 1; i < numRows; i++)
+	{
+		for (int j = 1; j < numColumns; j++)
+		{
+			// s00 s01
+			// s10 s11
+			Box* s11 = circles[i * numColumns + j];
+			Box* s01 = circles[(i - 1) * numColumns + j];
+			Box* s10 = circles[i * numColumns + j - 1];
+			Box* s00 = circles[(i - 1) * numColumns + j - 1];
+
+			// make springs to cardinal neighbours
+			if (s11 && s01)
+				scene->AddActor(new Spring(s11, s01, springForce, damping, spacing));
+			if (s11 && s10)
+				scene->AddActor(new Spring(s11, s10, springForce, damping, spacing));
+			if (s10 && s00)
+				scene->AddActor(new Spring(s10, s00, springForce, damping, spacing));
+			if (s01 && s00)
+				scene->AddActor(new Spring(s01, s00, springForce, damping, spacing));
+
+			// Diags / Shears
+			float diag = glm::sqrt(2);
+			if (s11 && s00)
+				scene->AddActor(new Spring(s11, s00, springForce, damping, spacing * diag));
+			if (s01 && s10)
+				scene->AddActor(new Spring(s01, s10, springForce, damping, spacing * diag));
+
+			// Bends
+			bool endOfJ = j == numColumns - 1;
+			bool endOfI = i == numRows - 1;
+
+			Box* s22 = (!endOfI && !endOfJ) ? circles[(i + 1) * numColumns + (j + 1)] : nullptr;
+			Box* s02 = !endOfJ ? circles[(i - 1) * numColumns + (j + 1)] : nullptr;
+			Box* s20 = !endOfI ? circles[(i + 1) * numColumns + j - 1] : nullptr;
 
 			if (s22 && s02)
 				scene->AddActor(new Spring(s22, s02, springForce, damping, spacing * 2));

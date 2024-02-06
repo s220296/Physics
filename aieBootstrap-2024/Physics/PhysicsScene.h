@@ -32,6 +32,8 @@ public:
 
 	void CheckForCollision();
 
+	std::vector<PhysicsObject*> GetActors() { return m_actors; }
+
 	static bool Plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Plane2Circle(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Circle2Plane(PhysicsObject* obj1, PhysicsObject* obj2);

@@ -20,3 +20,8 @@ void Circle::Draw(float alpha)
 		m_smoothedPosition + m_smoothedLocalX * m_radius,
 		glm::vec4(1, 1, 1, 1));
 }
+
+bool Circle::IsInside(glm::vec2 point)
+{
+	return glm::distance(point, m_position) <= m_radius;
+}

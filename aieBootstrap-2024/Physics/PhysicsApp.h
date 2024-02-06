@@ -21,10 +21,21 @@ public:
 
 protected:
 
+	const float m_extents = 100;
+	const float m_aspectRatio = 16.0f / 9.0f;
+
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
 	aie::Texture*		m_texture;
 	PhysicsScene*		m_physicsScene;
+
+	float				m_cameraX;
+	float				m_cameraY;
+
+protected:
+	void UserUpdate(float dt);
+
+	glm::vec2 ScreenToWorld(glm::vec2 screenPos);
 
 	// ===== For Demos Only =====
 public:

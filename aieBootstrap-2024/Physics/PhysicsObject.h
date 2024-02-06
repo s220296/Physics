@@ -25,6 +25,8 @@ public:
     virtual float GetElasticity() { return m_elasticity; }
     virtual void SetElasticity(float elasticity) { m_elasticity = elasticity; }
 
+    virtual bool IsInside(glm::vec2 point) { return false; }
+
 protected:
     ShapeType m_shapeID;
 

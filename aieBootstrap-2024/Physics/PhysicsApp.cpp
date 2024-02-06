@@ -63,6 +63,7 @@ void PhysicsApp::update(float deltaTime) {
 
 #endif // !ProjectileTest
 
+	UserUpdate(deltaTime);
 
 	// impememt physics scene
 	m_physicsScene->Update(deltaTime);
@@ -80,6 +81,8 @@ void PhysicsApp::draw() {
 	// wipe the screen to the background colour
 	clearScreen();
 
+	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
+
 	// begin drawing sprites
 	m_2dRenderer->begin();
 
@@ -91,9 +94,8 @@ void PhysicsApp::draw() {
 
 	//aie::Gizmos::add2DCircle(glm::vec2(0), 3.f, 15, glm::vec4(1));
 
-	static float aspectRatio = 16.f / 9.f;
-	aie::Gizmos::draw2D(glm::ortho<float>(-100, 100, 
-		-100 / aspectRatio, 100 / aspectRatio, -1.f, 1.f));
+	aie::Gizmos::draw2D(glm::ortho<float>(-m_extents, m_extents, 
+		-m_extents / m_aspectRatio, m_extents / m_aspectRatio, -1.f, 1.f));
 
 	// output some text, uses the last used colour
 	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
@@ -108,6 +110,43 @@ void PhysicsApp::draw() {
 
 	// done drawing sprites
 	m_2dRenderer->end();
+}
+
+void PhysicsApp::UserUpdate(float dt)
+{
+	aie::Input* input = aie::Input::getInstance();
+
+	if (input->isMouseButtonDown(0))
+	{
+		int xScreen, yScreen;
+		input->getMouseXY(&xScreen, &yScreen);
+		glm::vec2 worldPos = ScreenToWorld(glm::vec2(xScreen, yScreen));
+
+		aie::Gizmos::add2DCircle(worldPos, 5, 32, glm::vec4(0, 0, 1, 1));
+
+		for (PhysicsObject* obj : m_physicsScene->GetActors())
+		{
+			if (obj->IsInside(worldPos))
+			{
+				std::cout << obj->GetShapeID();
+			}
+		}
+	}
+}
+
+glm::vec2 PhysicsApp::ScreenToWorld(glm::vec2 screenPos)
+{
+	glm::vec2 worldPos = screenPos;
+
+	// move the centre of the screen to (0, 0)
+	worldPos.x -= getWindowWidth() * 0.5f;
+	worldPos.y -= getWindowHeight() * 0.5f;
+
+	//scale according to our extents
+	worldPos.x *= 2.0f * m_extents / getWindowWidth();
+	worldPos.y *= 2.0f * m_extents / (m_aspectRatio * getWindowHeight());
+
+	return worldPos;
 }
 
 Circle* circleStore1;
@@ -413,8 +452,17 @@ void PhysicsApp::DemoStartUp(int num)
 	sb.push_back("0000000000");
 	//sb.push_back("0000000000");
 
-	SoftBody::Build(m_physicsScene, vec2(0, 0), 5, 100, 6, sb);
-	SoftBody::Build(m_physicsScene, vec2(0, 100), 5, 100, 6, sb);
+	SoftBody::CircleBuild(m_physicsScene, vec2(0, 0), 5, 100, 6, sb);
+
+	sb.clear();
+	sb.push_back("00....00");
+	sb.push_back(".00..00.");
+	sb.push_back("..0000..");
+	sb.push_back(".00..00.");
+	sb.push_back("00....00");
+
+	SoftBody::CircleBuild(m_physicsScene, vec2(0, 50), 5, 100, 6, sb);
+	SoftBody::BoxBuild(m_physicsScene, vec2(30, 20), 10, 30, 8, sb);
 
 #endif // SoftBodyTest
 

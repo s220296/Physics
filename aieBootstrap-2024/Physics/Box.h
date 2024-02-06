@@ -18,6 +18,8 @@ public:
 	bool CheckBoxCorners(const Box& box, glm::vec2& contact, int& numContacts,
 		float& pen, glm::vec2& edgeNormal);
 		
+	bool IsInside(glm::vec2 point) override;
+
 protected:
 	glm::vec4 m_color;
 
