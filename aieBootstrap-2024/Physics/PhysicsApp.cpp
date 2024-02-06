@@ -373,12 +373,12 @@ void PhysicsApp::DemoStartUp(int num)
 	m_physicsScene->SetTimeStep(0.01f);
 
 	Circle* prev = nullptr;
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		// spawn a circle to the righjt and below the previous one, 
 		// so that the whole rope ats under gravity and swings
 		Circle* circle = new Circle(vec2(i * 3, 30 - i * 5), vec2(0), 10, 2, vec4(1, 0, 0, 1));
-		if (i == 0)
+		if (i == 0 || i == 5)
 			circle->SetKinematic(true);
 		m_physicsScene->AddActor(circle);
 		if (prev)
