@@ -23,4 +23,5 @@
 //#define BilliardsTest2
 // ===== Springs =====
 //#define Spring1
-#define RopeTest
+//#define RopeTest
+#define SoftBodyTest

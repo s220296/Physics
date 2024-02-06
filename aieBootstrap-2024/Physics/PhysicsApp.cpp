@@ -12,8 +12,11 @@
 #include "Plane.h"
 #include "Box.h"
 #include "Spring.h"
+#include "SoftBody.h"
 
 #include <iostream>
+#include <string>
+#include <vector>
 
 PhysicsApp::PhysicsApp() {
 
@@ -391,6 +394,29 @@ void PhysicsApp::DemoStartUp(int num)
 	m_physicsScene->AddActor(box);
 
 #endif // RopeTest
+
+#ifdef SoftBodyTest
+	using glm::vec2;
+	using glm::vec4;
+
+	m_physicsScene->SetGravity(vec2(0, -9));
+	m_physicsScene->SetTimeStep(0.01f);
+
+	Plane* floor = new Plane(vec2(0, 1), -20.f, vec4(1));
+	m_physicsScene->AddActor(floor);
+
+	std::vector<std::string> sb;
+	sb.push_back("....00....");
+	sb.push_back("...0000...");
+	sb.push_back("..000000..");
+	sb.push_back(".00000000.");
+	sb.push_back("0000000000");
+	//sb.push_back("0000000000");
+
+	SoftBody::Build(m_physicsScene, vec2(0, 0), 5, 100, 6, sb);
+	SoftBody::Build(m_physicsScene, vec2(0, 100), 5, 100, 6, sb);
+
+#endif // SoftBodyTest
 
 
 }
