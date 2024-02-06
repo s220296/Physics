@@ -11,6 +11,7 @@
 #include "Circle.h"
 #include "Plane.h"
 #include "Box.h"
+#include "Spring.h"
 
 #include <iostream>
 
@@ -82,7 +83,8 @@ void PhysicsApp::draw() {
 	// draw your stuff here!
 	
 	m_2dRenderer->setUVRect(0, 0, 1, 1);
-	m_2dRenderer->drawSprite(m_texture, 200, 200, 100, 100);
+	// this is the plane
+	// m_2dRenderer->drawSprite(m_texture, 200, 200, 100, 100);
 
 	//aie::Gizmos::add2DCircle(glm::vec2(0), 3.f, 15, glm::vec4(1));
 
@@ -338,6 +340,57 @@ void PhysicsApp::DemoStartUp(int num)
 	m_physicsScene->AddActor(rightWall);
 
 #endif // BilliardsTest2
+
+#ifdef Spring1
+	using glm::vec2;
+	using glm::vec4;
+
+	m_physicsScene->SetGravity(vec2(0, -9));
+	m_physicsScene->SetTimeStep(0.01f);
+
+	Circle* ball1 = new Circle(vec2(-20, 30), vec2(0), 5.f, 2.f, vec4(0, 1, 0, 1));
+	Circle* ball2 = new Circle(vec2(20, 30), vec2(0), 5.f, 2.f, vec4(0, 1, 0, 1));
+
+	m_physicsScene->AddActor(ball1);
+	m_physicsScene->AddActor(ball2);
+
+	ball2->SetKinematic(true);
+
+	Spring* spring1;
+
+	spring1 = new Spring(ball1, ball2, 5.f, 0.1f, 1.f);
+
+	if(spring1)
+		m_physicsScene->AddActor(spring1);
+
+#endif // Spring1
+
+#ifdef RopeTest
+	using glm::vec2;
+	using glm::vec4;
+
+	m_physicsScene->SetGravity(vec2(0, -9));
+	m_physicsScene->SetTimeStep(0.01f);
+
+	Circle* prev = nullptr;
+	for (int i = 0; i < 5; i++)
+	{
+		// spawn a circle to the righjt and below the previous one, 
+		// so that the whole rope ats under gravity and swings
+		Circle* circle = new Circle(vec2(i * 3, 30 - i * 5), vec2(0), 10, 2, vec4(1, 0, 0, 1));
+		if (i == 0)
+			circle->SetKinematic(true);
+		m_physicsScene->AddActor(circle);
+		if (prev)
+			m_physicsScene->AddActor(new Spring(circle, prev, 500, 10, 7));
+		prev = circle;
+	}
+
+	Box* box = new Box(vec2(0, -20), vec2(0), 0.3f, vec2(20, 20), 2, vec4(0, 0, 1, 1));
+	box->SetKinematic(true);
+	m_physicsScene->AddActor(box);
+
+#endif // RopeTest
 
 
 }

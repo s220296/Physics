@@ -20,4 +20,7 @@
 
 // ===== Billiards sim =====
 //#define BilliardsTest1
-#define BilliardsTest2
+//#define BilliardsTest2
+// ===== Springs =====
+//#define Spring1
+#define RopeTest

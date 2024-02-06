@@ -30,6 +30,8 @@ public:
 
 	float GetTotalEnergy();
 
+	void CheckForCollision();
+
 	static bool Plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Plane2Circle(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Circle2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
@@ -40,7 +42,6 @@ public:
 	static bool Circle2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Box2Circle(PhysicsObject* obj1, PhysicsObject* obj2);
 	
-
 protected:
 	glm::vec2 m_gravity;
 	float m_timeStep;

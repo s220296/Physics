@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 #include "Plane.h"
 #include "Box.h"
+#include "Spring.h"
 
 // function pointer array for doing our collisions
 typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
@@ -14,8 +15,6 @@ static fn collisionFunctionArray[] =
     PhysicsScene::Circle2Plane, PhysicsScene::Circle2Circle, PhysicsScene::Circle2Box,
     PhysicsScene::Box2Plane,    PhysicsScene::Box2Circle,    PhysicsScene::Box2Box
 };
-
-static const int SHAPE_COUNT = 3;
 
 static PhysicsScene* m_instance;
 
@@ -50,30 +49,7 @@ void PhysicsScene::Update(float dt) {
         }
         accumulatedTime -= m_timeStep;
 
-        // check for collisions (ideally you'd want to have some sort of 
-        // scene management in place)
-        int actorCount = m_actors.size();
-
-        // need to check for collisions against all objects except this one.
-        for (int outer = 0; outer < actorCount - 1; outer++)
-        {
-            for (int inner = outer + 1; inner < actorCount; inner++)
-            {
-                PhysicsObject* object1 = m_actors[outer];
-                PhysicsObject* object2 = m_actors[inner];
-                int shapeId1 = object1->GetShapeID();
-                int shapeId2 = object2->GetShapeID();
-
-                // using function pointers
-                int functionIdx = (shapeId1 * SHAPE_COUNT) + shapeId2;
-                fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
-                if (collisionFunctionPtr != nullptr)
-                {
-                    // did a collision occur?
-                    collisionFunctionPtr(object1, object2);
-                }
-            }
-        }
+        CheckForCollision();
     }
 }
 
@@ -109,6 +85,39 @@ float PhysicsScene::GetTotalEnergy()
         total += obj->GetEnergy();
     }
     return total;
+}
+
+void PhysicsScene::CheckForCollision()
+{
+    // check for collisions (ideally you'd want to have some sort of 
+        // scene management in place)
+    int actorCount = m_actors.size();
+
+    // need to check for collisions against all objects except this one.
+    for (int outer = 0; outer < actorCount - 1; outer++)
+    {
+        for (int inner = outer + 1; inner < actorCount; inner++)
+        {
+            PhysicsObject* object1 = m_actors[outer];
+            PhysicsObject* object2 = m_actors[inner];
+            int shapeId1 = object1->GetShapeID();
+            int shapeId2 = object2->GetShapeID();
+
+            // this check will ensure we don't include any joints
+            // in the collision checks
+            if (shapeId1 < 0 || shapeId2 < 0)
+                continue;
+
+            // using function pointers
+            int functionIdx = (shapeId1 * SHAPECOUNT) + shapeId2;
+            fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
+            if (collisionFunctionPtr != nullptr)
+            {
+                // did a collision occur?
+                collisionFunctionPtr(object1, object2);
+            }
+        }
+    }
 }
 
 bool PhysicsScene::Plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2)

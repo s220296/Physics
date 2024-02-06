@@ -3,8 +3,8 @@
 #include "PhysicsObject.h"
 #include "glm/glm.hpp"
 
-#define MIN_LINEAR_THRESHOLD 0.1f
-#define MIN_ANGULAR_THRESHOLD 0.01f
+#define MIN_LINEAR_THRESHOLD 0.08f
+#define MIN_ANGULAR_THRESHOLD 0.005f
 
 class Rigidbody : public PhysicsObject {
 public:
@@ -45,6 +45,9 @@ public:
 
     void SetKinematic(bool state) { m_isKinematic = state; }
     bool IsKinematic() { return m_isKinematic; }
+
+    glm::vec2 ToWorld(glm::vec2 contact, float alpha);
+    glm::vec2 ToWorldSmoothed(glm::vec2 localPos, float alpha);
 
 protected:
     bool m_isKinematic;

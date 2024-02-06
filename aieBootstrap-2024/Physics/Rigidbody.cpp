@@ -147,3 +147,15 @@ void Rigidbody::CalculateSmoothedPosition(float alpha)
 	m_smoothedLocalX = glm::vec2(cs, sn);
 	m_smoothedLocalY = glm::vec2(-sn, cs);
 }
+
+glm::vec2 Rigidbody::ToWorld(glm::vec2 contact, float alpha)
+{
+	return GetPosition() + GetLocalX() * contact.x + GetLocalY() * contact.y;
+}
+
+glm::vec2 Rigidbody::ToWorldSmoothed(glm::vec2 localPos, float alpha)
+{
+	CalculateSmoothedPosition(alpha);
+
+	return m_smoothedPosition + m_smoothedLocalX * localPos.x + m_smoothedLocalY * localPos.y;
+}
