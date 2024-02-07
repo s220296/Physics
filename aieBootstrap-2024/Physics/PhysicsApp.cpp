@@ -513,6 +513,8 @@ void PhysicsApp::DemoStartUp(int num)
 	m_physicsScene->AddActor(new Box(glm::vec2(20, 10), glm::vec2(3, 0), 0.5f, glm::vec2(4), 8, glm::vec4(1, 1, 0, 1)));
 	m_physicsScene->AddActor(new Box(glm::vec2(-40, 10), glm::vec2(3, 0), 0.5f, glm::vec2(4), 8, glm::vec4(1, 0, 1, 1)));
 
+	ball1->collisionCallback = [=](PhysicsObject* other) { std::cout << "Collide: " << other << std::endl; };
+
 	ball2->triggerEnter = [=](PhysicsObject* other) { std::cout << "Enter: " << other << std::endl; };
 	ball2->triggerExit = [=](PhysicsObject* other) { std::cout << "Exit: " << other << std::endl; };
 
