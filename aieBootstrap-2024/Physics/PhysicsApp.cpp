@@ -13,6 +13,7 @@
 #include "Box.h"
 #include "Spring.h"
 #include "SoftBody.h"
+#include "Player.h"
 
 #include <iostream>
 #include <string>
@@ -46,6 +47,16 @@ bool PhysicsApp::startup() {
 
 	currentlySelected = nullptr;
 
+	// For Ball Game
+	m_player = new Player(nullptr);
+
+	std::vector<PhysicsObject*> level = m_player->GenerateLevel();
+
+	for (int i = 0; i < level.size(); i++)
+	{
+		m_physicsScene->AddActor(level[i]);
+	}
+
 	DemoStartUp(1);
 
 	return true;
@@ -55,6 +66,7 @@ void PhysicsApp::shutdown() {
 
 	delete m_font;
 	delete m_2dRenderer;
+	delete m_player;
 }
 
 void PhysicsApp::update(float deltaTime) {
@@ -161,7 +173,14 @@ void PhysicsApp::UserUpdate(float dt)
 {
 	aie::Input* input = aie::Input::getInstance();
 
-	GrabAndMove(input);
+	BallGame(dt, input);
+
+	//GrabAndMove(input);
+}
+
+void PhysicsApp::BallGame(float dt, aie::Input* input)
+{
+
 }
 
 glm::vec2 PhysicsApp::ScreenToWorld(glm::vec2 screenPos)

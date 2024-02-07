@@ -6,6 +6,7 @@
 #include "glm/vec2.hpp"
 
 class PhysicsScene;
+class Player;
 
 class PhysicsApp : public aie::Application {
 public:
@@ -32,9 +33,14 @@ protected:
 	float				m_cameraX;
 	float				m_cameraY;
 
+protected: // Ball Game Variables
+	Player* m_player;
+
 protected:
-	void UserUpdate(float dt);
 	void GrabAndMove(aie::Input* input);
+	void UserUpdate(float dt);
+
+	void BallGame(float dt, aie::Input* input);
 
 	glm::vec2 ScreenToWorld(glm::vec2 screenPos);
 

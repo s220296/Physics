@@ -7,7 +7,7 @@
 
 // ===== Debug ======
 //#define TotalEnergyPrint
-#define TriggerTest
+//#define TriggerTest
 
 // ===== planes ======
 //#define PlaneBallTest
