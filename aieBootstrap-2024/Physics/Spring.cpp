@@ -64,6 +64,32 @@ glm::vec2 Spring::GetContact2(float alpha)
 	return m_body2 ? m_body2->ToWorld(m_contact2, alpha) : m_contact2;
 }
 
+bool Spring::IsInside(glm::vec2 point)
+{
+	return false;
+
+	// TODO: this doesn't work, but its close
+
+	const float tolerance = 0.1f;
+
+	glm::vec2 closestPointHorizontally = glm::vec2(0);
+	glm::vec2 closestPointVertically = glm::vec2(0);
+	glm::vec2 contactNormal = glm::normalize(GetContact1() - GetContact2());
+	glm::vec2 pointDiff = point - GetContact2();
+
+	closestPointHorizontally = GetContact2() + (((pointDiff).x / contactNormal.x) * contactNormal);
+	closestPointVertically = GetContact2() + (((pointDiff).y / contactNormal.y) * contactNormal);
+
+	aie::Gizmos::add2DCircle(closestPointHorizontally, 2.f, 5, glm::vec4(1, 1, 0, 1));
+	aie::Gizmos::add2DCircle(closestPointVertically, 2.f, 5, glm::vec4(1, 0, 1, 1));
+
+	if (glm::distance(closestPointHorizontally, point) <= tolerance &&
+		glm::distance(closestPointVertically, point) <= tolerance)
+		return true;
+
+	return false;
+}
+
 glm::vec2 Spring::GetSmoothedContact1(float alpha)
 {
 	return m_body1 ? m_body1->ToWorldSmoothed(m_contact1, alpha) : m_contact1;

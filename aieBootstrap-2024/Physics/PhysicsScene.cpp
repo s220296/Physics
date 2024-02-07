@@ -62,6 +62,9 @@ void PhysicsScene::Draw()
 
 void PhysicsScene::ApplyContactForces(Rigidbody* body1, Rigidbody* body2, glm::vec2 norm, float pen)
 {
+    if ((body1 && body1->IsTrigger()) || (body2 && body2->IsTrigger()))
+        return;
+
     float body2Mass = body2 ? body2->GetMass() : INT_MAX;
     float body1Factor = body2Mass / (body1->GetMass() + body2Mass);
 
@@ -322,5 +325,7 @@ void PhysicsScene::AddActor(PhysicsObject* actor)
 
 void PhysicsScene::RemoveActor(PhysicsObject* actor)
 {
-	m_actors.erase(std::find(m_actors.begin(), m_actors.end(), actor));
+    auto it = std::find(m_actors.begin(), m_actors.end(), actor);
+    if(it != m_actors.end())
+	    m_actors.erase(it);
 }

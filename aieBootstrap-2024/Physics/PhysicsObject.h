@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/vec2.hpp"
+#include <functional>
 
 enum ShapeType {
       JOINT = -1

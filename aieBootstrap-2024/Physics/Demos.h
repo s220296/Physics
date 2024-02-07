@@ -7,6 +7,7 @@
 
 // ===== Debug ======
 //#define TotalEnergyPrint
+#define TriggerTest
 
 // ===== planes ======
 //#define PlaneBallTest
@@ -21,7 +22,8 @@
 // ===== Billiards sim =====
 //#define BilliardsTest1
 //#define BilliardsTest2
+// 
 // ===== Springs =====
 //#define Spring1
 //#define RopeTest
-#define SoftBodyTest
+//#define SoftBodyTest

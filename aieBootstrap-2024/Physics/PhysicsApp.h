@@ -34,6 +34,7 @@ protected:
 
 protected:
 	void UserUpdate(float dt);
+	void GrabAndMove(aie::Input* input);
 
 	glm::vec2 ScreenToWorld(glm::vec2 screenPos);
 

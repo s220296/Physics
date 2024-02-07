@@ -2,6 +2,8 @@
 
 #include "PhysicsObject.h"
 #include "glm/glm.hpp"
+#include <functional>
+#include <list>
 
 #define MIN_LINEAR_THRESHOLD 0.08f
 #define MIN_ANGULAR_THRESHOLD 0.005f
@@ -46,10 +48,26 @@ public:
     void SetKinematic(bool state) { m_isKinematic = state; }
     bool IsKinematic() { return m_isKinematic; }
 
+    void SetTrigger(bool state) { m_isTrigger = state; }
+    bool IsTrigger() { return m_isTrigger; }
+
     glm::vec2 ToWorld(glm::vec2 contact, float alpha);
     glm::vec2 ToWorldSmoothed(glm::vec2 localPos, float alpha);
 
+    void TriggerEnter(PhysicsObject* actor2);
+    void TriggerExit(PhysicsObject* actor2);
+
+public:
+    std::function<void(PhysicsObject*)> collisionCallback;
+
+    std::function<void(PhysicsObject*)> triggerEnter;
+    std::function<void(PhysicsObject*)> triggerExit;
+
 protected:
+    bool m_isTrigger;
+    std::list<PhysicsObject*> m_objectsInside;
+    std::list<PhysicsObject*> m_objectsInsideThisFrame;
+
     bool m_isKinematic;
 
     glm::vec2 m_position;

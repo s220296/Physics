@@ -18,6 +18,8 @@
 #include <string>
 #include <vector>
 
+PhysicsObject* currentlySelected;
+
 PhysicsApp::PhysicsApp() {
 
 }
@@ -41,6 +43,8 @@ bool PhysicsApp::startup() {
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->SetCurrentInstance(m_physicsScene);
 	m_physicsScene->SetTimeStep(0.01f);
+
+	currentlySelected = nullptr;
 
 	DemoStartUp(1);
 
@@ -112,26 +116,52 @@ void PhysicsApp::draw() {
 	m_2dRenderer->end();
 }
 
-void PhysicsApp::UserUpdate(float dt)
+void PhysicsApp::GrabAndMove(aie::Input* input)
 {
-	aie::Input* input = aie::Input::getInstance();
-
 	if (input->isMouseButtonDown(0))
 	{
 		int xScreen, yScreen;
 		input->getMouseXY(&xScreen, &yScreen);
-		glm::vec2 worldPos = ScreenToWorld(glm::vec2(xScreen, yScreen));
+		glm::vec2 worldPos = PhysicsApp::ScreenToWorld(glm::vec2(xScreen, yScreen));
 
 		aie::Gizmos::add2DCircle(worldPos, 5, 32, glm::vec4(0, 0, 1, 1));
 
-		for (PhysicsObject* obj : m_physicsScene->GetActors())
+		if (!currentlySelected)
 		{
-			if (obj->IsInside(worldPos))
+			for (PhysicsObject* obj : m_physicsScene->GetActors())
 			{
-				std::cout << obj->GetShapeID();
+				if (obj->IsInside(worldPos))
+				{
+					currentlySelected = obj;
+				}
 			}
 		}
+		else
+		{
+			Rigidbody* rb = dynamic_cast<Rigidbody*>(currentlySelected);
+
+			if (rb)
+			{
+				rb->ApplyForce(glm::normalize(worldPos - rb->GetPosition()) * 0.02f, glm::vec2(0));
+			}
+			else
+			{
+				m_physicsScene->RemoveActor(currentlySelected);
+
+			}
+
+			
+		}
 	}
+	if (input->isMouseButtonUp(0))
+		currentlySelected = nullptr;
+}
+
+void PhysicsApp::UserUpdate(float dt)
+{
+	aie::Input* input = aie::Input::getInstance();
+
+	GrabAndMove(input);
 }
 
 glm::vec2 PhysicsApp::ScreenToWorld(glm::vec2 screenPos)
@@ -465,6 +495,28 @@ void PhysicsApp::DemoStartUp(int num)
 	SoftBody::BoxBuild(m_physicsScene, vec2(30, 20), 10, 30, 8, sb);
 
 #endif // SoftBodyTest
+
+#ifdef TriggerTest
+	m_physicsScene->SetGravity(glm::vec2(0, -9.f));
+
+	Circle* ball1 = new Circle(glm::vec2(-20, 0), glm::vec2(0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
+	Circle* ball2 = new Circle(glm::vec2(10, -20), glm::vec2(0), 4.0f, 4, glm::vec4(0, 1, 0, 1));
+
+	ball2->SetKinematic(true);
+	ball2->SetTrigger(true);
+
+	m_physicsScene->AddActor(ball1);
+	m_physicsScene->AddActor(ball2);
+	m_physicsScene->AddActor(new Plane(glm::vec2(0, 1), -30, glm::vec4(1)));
+	m_physicsScene->AddActor(new Plane(glm::vec2(1, 0), -50, glm::vec4(1)));
+	m_physicsScene->AddActor(new Plane(glm::vec2(-1, 0), -50, glm::vec4(1)));
+	m_physicsScene->AddActor(new Box(glm::vec2(20, 10), glm::vec2(3, 0), 0.5f, glm::vec2(4), 8, glm::vec4(1, 1, 0, 1)));
+	m_physicsScene->AddActor(new Box(glm::vec2(-40, 10), glm::vec2(3, 0), 0.5f, glm::vec2(4), 8, glm::vec4(1, 0, 1, 1)));
+
+	ball2->triggerEnter = [=](PhysicsObject* other) { std::cout << "Enter: " << other << std::endl; };
+	ball2->triggerExit = [=](PhysicsObject* other) { std::cout << "Exit: " << other << std::endl; };
+
+#endif // TriggerTest
 
 
 }

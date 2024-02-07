@@ -20,6 +20,9 @@ public:
 	glm::vec2 GetContact1(float alpha = 1.f);
 	glm::vec2 GetContact2(float alpha = 1.f);
 
+	// More accurately 'IsAround()'
+	bool IsInside(glm::vec2 point) override;
+
 protected:
 	glm::vec2 GetSmoothedContact1(float alpha = 1.f);
 	glm::vec2 GetSmoothedContact2(float alpha = 1.f);
