@@ -22,10 +22,10 @@ std::vector<PhysicsObject*> Player::GenerateLevel()
 
 	// 20 x 20
 	sLevel.push_back("11111111111111111111");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000000000001");
+	sLevel.push_back("10001000000000000001");
+	sLevel.push_back("10011100000000000001");
+	sLevel.push_back("10011100000000000001");
+	sLevel.push_back("10011100000000000001");
 	sLevel.push_back("10000000000000000001");
 	sLevel.push_back("10000000000000000001");
 	sLevel.push_back("10000000000000000001");
@@ -42,11 +42,11 @@ std::vector<PhysicsObject*> Player::GenerateLevel()
 	sLevel.push_back("10000000000000000001");
 	sLevel.push_back("11111111111111111111");
 
-	level = new int[sLevel.size() * sLevel[0].length()];
+	level = new int[400];
 	
-	for (int i = 0; i < sLevel.size(); i++)
+	for (int i = 0; i < 20; i++)
 	{
-		for (int j = 0; j < sLevel[0].length(); j++)
+		for (int j = 0; j < 20; j++)
 		{
 			level[i * sLevel[0].length() + j] = sLevel[i][j] - '0';
 		}

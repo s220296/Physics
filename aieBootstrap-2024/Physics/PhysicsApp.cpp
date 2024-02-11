@@ -48,14 +48,7 @@ bool PhysicsApp::startup() {
 	currentlySelected = nullptr;
 
 	// For Ball Game
-	m_player = new Player(nullptr);
-
-	std::vector<PhysicsObject*> level = m_player->GenerateLevel();
-
-	for (int i = 0; i < level.size(); i++)
-	{
-		m_physicsScene->AddActor(level[i]);
-	}
+	BallGameStart();
 
 	DemoStartUp(1);
 
@@ -176,6 +169,22 @@ void PhysicsApp::UserUpdate(float dt)
 	BallGame(dt, input);
 
 	//GrabAndMove(input);
+}
+
+void PhysicsApp::BallGameStart()
+{
+	m_physicsScene->SetGravity(glm::vec2(0, -9));
+
+	m_player = new Player(new Circle(glm::vec2(0), glm::vec2(0), 5.f, 5.f, glm::vec4(1)));
+	m_physicsScene->AddActor(m_player->body);
+	m_player->body->SetKinematic(false);
+
+	std::vector<PhysicsObject*> level = m_player->GenerateLevel();
+
+	for (int i = 0; i < level.size(); i++)
+	{
+		m_physicsScene->AddActor(level[i]);
+	}
 }
 
 void PhysicsApp::BallGame(float dt, aie::Input* input)

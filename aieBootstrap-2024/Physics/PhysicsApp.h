@@ -40,6 +40,7 @@ protected:
 	void GrabAndMove(aie::Input* input);
 	void UserUpdate(float dt);
 
+	void BallGameStart();
 	void BallGame(float dt, aie::Input* input);
 
 	glm::vec2 ScreenToWorld(glm::vec2 screenPos);
