@@ -3,6 +3,7 @@
 #include "vector"
 
 class GameScene;
+class PhysicsScene;
 
 class GameStateManager
 {

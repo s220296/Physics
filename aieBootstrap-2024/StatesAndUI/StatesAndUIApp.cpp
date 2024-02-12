@@ -9,6 +9,8 @@
 #include "GameStateManager.h"
 #include "GamePlayScene.h"
 #include "MenuScene.h"
+#include "PhysicsScene.h"
+#include "Circle.h"
 
 using glm::vec2;
 using glm::vec4;

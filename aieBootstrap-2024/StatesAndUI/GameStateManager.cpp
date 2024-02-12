@@ -5,6 +5,8 @@ GameStateManager::GameStateManager(GameScene* initialState)
 {
 	m_currentGameState = initialState;
 	m_gameStates.push_back(initialState);
+
+	m_currentGameState->Enter();
 }
 
 GameStateManager::~GameStateManager()

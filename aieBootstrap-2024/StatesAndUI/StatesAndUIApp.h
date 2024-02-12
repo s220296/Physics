@@ -4,6 +4,7 @@
 #include "Renderer2D.h"
 
 class GameStateManager;
+class PhysicsScene;
 
 class StatesAndUIApp : public aie::Application {
 public:
@@ -21,5 +22,5 @@ protected:
 
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
-	GameStateManager* m_gameStateManager;
+	GameStateManager*	m_gameStateManager;
 };
