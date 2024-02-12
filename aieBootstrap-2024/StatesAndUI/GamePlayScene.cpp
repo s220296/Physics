@@ -106,9 +106,9 @@ std::vector<PhysicsObject*> GamePlayScene::GenerateLevel()
 	sLevel.push_back("10000000000000000001");
 	sLevel.push_back("10000000000000000001");
 	sLevel.push_back("10000000000011110001");
-	sLevel.push_back("10000000000010010001");
-	sLevel.push_back("10000000000000010001");
-	sLevel.push_back("10000000000000010001");
+	sLevel.push_back("10000000000013010001");
+	sLevel.push_back("10000000000020010001");
+	sLevel.push_back("10000000000020010001");
 	sLevel.push_back("10000000000011110001");
 	sLevel.push_back("10000000000000000001");
 	sLevel.push_back("10010000000000000001");
@@ -137,6 +137,21 @@ std::vector<PhysicsObject*> GamePlayScene::GenerateLevel()
 				glm::vec2(0), 5.f, blockSize * 0.5f, 0.f, glm::vec4(0, 1, 0, 1));
 			box->SetKinematic(true);
 			result.push_back(box);
+
+			box->SetAngularDrag(8.f); box->SetLinearDrag(2.f); box->SetElasticity(0.6f);
+		}
+		if (level[i] == 2)
+		{
+			Box* box = new Box(glm::vec2(blockSize.x * (i % 20) - (blockSize.x * 9), blockSize.y * (i / 20) - (blockSize.y * 9)),
+				glm::vec2(0), 5.f, glm::vec2(blockSize.y * 0.5f), 0.f, glm::vec4(1, 1, 0, 1));
+			box->SetKinematic(false);
+			result.push_back(box);
+
+			box->SetAngularDrag(8.f); box->SetLinearDrag(2.f); box->SetElasticity(0.4f);
+		}
+		if (level[i] == 3)
+		{
+			m_targetBody->SetPosition(glm::vec2(blockSize.x * (i % 20) - (blockSize.x * 9), blockSize.y * (i / 20) - (blockSize.y * 9)));
 		}
 	}
 
