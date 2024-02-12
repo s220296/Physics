@@ -5,14 +5,11 @@
 #include <functional>
 #include <list>
 
-static float MIN_LINEAR_THRESHOLD = 0.01f;
-static float MIN_ANGULAR_THRESHOLD = 0.01f;
+const static float MIN_LINEAR_THRESHOLD = 0.01f;
+const static float MIN_ANGULAR_THRESHOLD = 0.3f;
 
 class Rigidbody : public PhysicsObject {
 public:
-    static void SetLinearThreshold(float threshold) { MIN_LINEAR_THRESHOLD = threshold; }
-    static void SetAngularThreshold(float threshold) { MIN_ANGULAR_THRESHOLD = threshold; }
-
     Rigidbody(ShapeType shapeID, glm::vec2 position,
         glm::vec2 velocity, float orientation, float mass);
     ~Rigidbody();

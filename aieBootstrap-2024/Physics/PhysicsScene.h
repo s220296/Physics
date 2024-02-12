@@ -33,6 +33,7 @@ public:
 	void CheckForCollision();
 	
 	PhysicsObject* PointCast(glm::vec2 point);
+	PhysicsObject* LineCast(PhysicsObject* ignore, glm::vec2 position, glm::vec2 direction, float distance, glm::vec2& pointOfContact);
 
 	std::vector<PhysicsObject*> GetActors() { return m_actors; }
 

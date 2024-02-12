@@ -37,7 +37,7 @@ void GamePlayScene::Enter()
 				
 			}
 		};
-	
+
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->SetCurrentInstance(m_physicsScene);
 	m_physicsScene->SetGravity(vec2(0, -18));
@@ -61,11 +61,17 @@ void GamePlayScene::Update(float dt)
 
 	if (m_input->isMouseButtonDown(aie::INPUT_MOUSE_BUTTON_LEFT) && !isGrappling)
 	{
-		PhysicsObject* po = m_physicsScene->PointCast(StatesAndUIApp::worldMousePos);
+		glm::vec2 pointOfContact = glm::vec2(0);
+
+		PhysicsObject* po = m_physicsScene->LineCast(m_player, // ignore the player
+			m_player->GetPosition(), // cast from player
+			StatesAndUIApp::worldMousePos - m_player->GetPosition(), // cast towards mouse
+			glm::distance(StatesAndUIApp::worldMousePos, m_player->GetPosition()), 
+			pointOfContact);
 
 		if (po) // if legal grapple point, commence grapple
 		{
-			grapplePoint = StatesAndUIApp::worldMousePos;
+			grapplePoint = pointOfContact;
 
 			m_grapple = new Spring(m_player, nullptr, 2.5f, 0.f, 0.3f, glm::vec2(0), grapplePoint);
 			m_physicsScene->AddActor(m_grapple);

@@ -136,6 +136,28 @@ PhysicsObject* PhysicsScene::PointCast(glm::vec2 point)
     return nullptr;
 }
 
+PhysicsObject* PhysicsScene::LineCast(PhysicsObject* ignore, glm::vec2 position, glm::vec2 direction, float distance, glm::vec2& pointOfContact)
+{
+    const float distancePerCheck = 0.1f;
+    float distanceTravelled = 0.f;
+    
+    direction = glm::normalize(direction);
+
+    for (distanceTravelled = 0.f; distanceTravelled < distance; distanceTravelled += distancePerCheck)
+    {
+        PhysicsObject* result = PointCast(position + direction * distanceTravelled);
+
+        if (result != nullptr && result != ignore)
+        {
+            pointOfContact = position + direction * distanceTravelled;
+            return result;
+        }
+    }
+
+    pointOfContact = glm::vec2(0);
+    return nullptr;
+}
+
 bool PhysicsScene::Plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 {
     return false;
