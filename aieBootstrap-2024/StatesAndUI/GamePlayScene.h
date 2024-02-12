@@ -9,6 +9,7 @@
 class PhysicsObject;
 class PhysicsScene;
 class Circle;
+class Spring;
 
 class GamePlayScene : public GameScene
 {
@@ -24,7 +25,13 @@ public:
 protected:
 	PhysicsScene* m_physicsScene;
 
+	Circle* m_targetBody;
+
 	Circle* m_player;
+	Spring* m_grapple;
+
+	bool isGrappling;
+
 	glm::vec2 grapplePoint;
 	aie::Input* m_input;
 };

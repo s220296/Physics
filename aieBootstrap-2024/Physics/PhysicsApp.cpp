@@ -99,7 +99,7 @@ void PhysicsApp::draw() {
 	
 	m_2dRenderer->setUVRect(0, 0, 1, 1);
 	// this is the plane
-	// m_2dRenderer->drawSprite(m_texture, 200, 200, 100, 100);
+	 m_2dRenderer->drawSprite(m_texture, 200, 200, 100, 100);
 
 	//aie::Gizmos::add2DCircle(glm::vec2(0), 3.f, 15, glm::vec4(1));
 

@@ -26,4 +26,4 @@
 // ===== Springs =====
 //#define Spring1
 //#define RopeTest
-//#define SoftBodyTest
+#define SoftBodyTest

@@ -22,32 +22,66 @@ GamePlayScene::GamePlayScene() : GameScene("Gameplay")
 void GamePlayScene::Enter()
 {
 	m_input = aie::Input::getInstance();
-	
+
 	m_player = new Circle(vec2(0), vec2(0), 5.f, 4.f, vec4(1));
+
+	m_targetBody = new Circle(vec2(40, 40), vec2(0), 5.f, 3.5f, vec4(1, 0, 0, 1));
+
+	m_targetBody->collisionCallback = [=](PhysicsObject* other)
+		{ 
+			Circle* circle = dynamic_cast<Circle*>(other);
+			if (circle && circle == m_player)
+			{
+				// what happens when target is hit?
+				// probably just win
+				
+			}
+		};
 	
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->SetCurrentInstance(m_physicsScene);
-	m_physicsScene->SetGravity(vec2(0, -9));
+	m_physicsScene->SetGravity(vec2(0, -18));
 	m_physicsScene->SetTimeStep(0.01f);
 
 	m_physicsScene->AddActor(m_player);
+	m_physicsScene->AddActor(m_targetBody);
 
 	std::vector<PhysicsObject*> levelObjects = GenerateLevel();
 
 	for (PhysicsObject* po : levelObjects)
 		m_physicsScene->AddActor(po);
+
+	grapplePoint = glm::vec2(0);
+	isGrappling = false;
 }
 
 void GamePlayScene::Update(float dt)
 {
 	m_physicsScene->Update(dt);
 
-	if (m_input->isMouseButtonDown(aie::INPUT_MOUSE_BUTTON_LEFT))
+	if (m_input->isMouseButtonDown(aie::INPUT_MOUSE_BUTTON_LEFT) && !isGrappling)
 	{
 		PhysicsObject* po = m_physicsScene->PointCast(StatesAndUIApp::worldMousePos);
 
-		if (po)// make this grapple point
-			aie::Gizmos::add2DCircle(StatesAndUIApp::worldMousePos, 5.f, 15, vec4(1));
+		if (po) // if legal grapple point, commence grapple
+		{
+			grapplePoint = StatesAndUIApp::worldMousePos;
+
+			m_grapple = new Spring(m_player, nullptr, 2.5f, 0.f, 0.3f, glm::vec2(0), grapplePoint);
+			m_physicsScene->AddActor(m_grapple);
+
+			isGrappling = true;
+		}
+	}
+	else if(m_input->isMouseButtonUp(aie::INPUT_MOUSE_BUTTON_LEFT) && isGrappling)
+	{
+		grapplePoint = glm::vec2(0);
+		m_physicsScene->RemoveActor(m_grapple);
+
+		isGrappling = false;
+
+		delete m_grapple;
+		m_grapple = nullptr;
 	}
 }
 
@@ -73,11 +107,11 @@ std::vector<PhysicsObject*> GamePlayScene::GenerateLevel()
 	sLevel.push_back("10000000000000000001");
 	sLevel.push_back("10000000000011110001");
 	sLevel.push_back("10000000000010010001");
-	sLevel.push_back("10000000000010010001");
+	sLevel.push_back("10000000000000010001");
 	sLevel.push_back("10000000000000010001");
 	sLevel.push_back("10000000000011110001");
 	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000000000001");
+	sLevel.push_back("10010000000000000001");
 	sLevel.push_back("10000000000000000001");
 	sLevel.push_back("10000000000000000001");
 	sLevel.push_back("11111111111111111111");
