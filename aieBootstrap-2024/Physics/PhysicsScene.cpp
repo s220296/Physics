@@ -123,6 +123,19 @@ void PhysicsScene::CheckForCollision()
     }
 }
 
+PhysicsObject* PhysicsScene::PointCast(glm::vec2 point)
+{
+    for (PhysicsObject* po : m_actors)
+    {
+        if (po->IsInside(point))
+        {
+            return po;
+        }
+    }
+
+    return nullptr;
+}
+
 bool PhysicsScene::Plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 {
     return false;

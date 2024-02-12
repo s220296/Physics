@@ -15,6 +15,8 @@
 using glm::vec2;
 using glm::vec4;
 
+glm::vec2 StatesAndUIApp::worldMousePos;
+
 StatesAndUIApp::StatesAndUIApp() {
 
 }
@@ -62,6 +64,9 @@ void StatesAndUIApp::update(float deltaTime) {
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
+
+	glm::vec2 mouse(input->getMouseX(), input->getMouseY());
+	worldMousePos = ScreenToWorld(mouse);
 }
 
 void StatesAndUIApp::draw() {
@@ -88,4 +93,19 @@ void StatesAndUIApp::draw() {
 
 	// done drawing sprites
 	m_2dRenderer->end();
+}
+
+glm::vec2 StatesAndUIApp::ScreenToWorld(glm::vec2 screenPos)
+{
+	glm::vec2 worldPos = screenPos;
+
+	// move the centre of the screen to (0, 0)
+	worldPos.x -= getWindowWidth() * 0.5f;
+	worldPos.y -= getWindowHeight() * 0.5f;
+
+	//scale according to our extents
+	worldPos.x *= 2.0f * m_extents / getWindowWidth();
+	worldPos.y *= 2.0f * m_extents / (m_aspectRatio * getWindowHeight());
+
+	return worldPos;
 }

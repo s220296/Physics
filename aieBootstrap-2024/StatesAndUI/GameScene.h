@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector"
+#include "glm/vec2.hpp"
 
 class State;
 
@@ -20,4 +21,3 @@ public:
 private:
 	const char* m_sceneName;
 };
-

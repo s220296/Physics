@@ -31,6 +31,8 @@ public:
 	float GetTotalEnergy();
 
 	void CheckForCollision();
+	
+	PhysicsObject* PointCast(glm::vec2 point);
 
 	std::vector<PhysicsObject*> GetActors() { return m_actors; }
 

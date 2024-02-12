@@ -23,8 +23,8 @@ Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position,
 	m_linearDrag = 0.3f;
 	m_angularDrag = 0.3f;
 
-	m_isKinematic = false;
-	m_isTrigger = false;
+	SetKinematic(false);
+	SetTrigger(false);
 
 	CalculateAxes();
 }
