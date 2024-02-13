@@ -35,6 +35,8 @@ Rigidbody::~Rigidbody()
 
 void Rigidbody::FixedUpdate(glm::vec2 gravity, float timeStep)
 {
+	m_lastPosition = m_position;
+	m_lastOrientation = m_orientation;
 	// store the local axes
 	CalculateAxes();
 
@@ -67,22 +69,27 @@ void Rigidbody::FixedUpdate(glm::vec2 gravity, float timeStep)
 
 		return;
 	}
-
-	m_lastPosition = m_position;
 	
 	m_position += m_velocity * timeStep;
 	ApplyForce(gravity * m_mass * timeStep, glm::vec2(0));
 
-	m_lastOrientation = m_orientation;
-	m_orientation += m_angularVelocity * timeStep;
 
 	m_velocity -= m_velocity * m_linearDrag * timeStep;
 	m_angularVelocity -= m_angularVelocity * m_angularDrag * timeStep;
 
+	m_orientation += m_angularVelocity * timeStep;
+
 	if (glm::length(m_velocity) < MIN_LINEAR_THRESHOLD)
 		m_velocity = glm::vec2(0, 0);
 	if (glm::abs(m_angularVelocity) < MIN_ANGULAR_THRESHOLD)
+	{
 		m_angularVelocity = 0.f;
+
+		if (GetShapeID() == BOX)
+		{
+			// round to nearest 90 degrees to stop jittering
+		}
+	}
 }
 
 void Rigidbody::ApplyForce(glm::vec2 force, glm::vec2 pos)

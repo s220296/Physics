@@ -6,7 +6,7 @@
 #include <list>
 
 const static float MIN_LINEAR_THRESHOLD = 0.01f;
-const static float MIN_ANGULAR_THRESHOLD = 0.3f;
+const static float MIN_ANGULAR_THRESHOLD = 0.01f;
 
 class Rigidbody : public PhysicsObject {
 public:

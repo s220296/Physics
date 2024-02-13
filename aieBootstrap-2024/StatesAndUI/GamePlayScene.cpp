@@ -58,7 +58,7 @@ void GamePlayScene::Enter()
 void GamePlayScene::Update(float dt)
 {
 	m_physicsScene->Update(dt);
-
+	// Try to engage grapple
 	if (m_input->isMouseButtonDown(aie::INPUT_MOUSE_BUTTON_LEFT) && !isGrappling)
 	{
 		glm::vec2 pointOfContact = glm::vec2(0);
@@ -66,19 +66,22 @@ void GamePlayScene::Update(float dt)
 		PhysicsObject* po = m_physicsScene->LineCast(m_player, // ignore the player
 			m_player->GetPosition(), // cast from player
 			StatesAndUIApp::worldMousePos - m_player->GetPosition(), // cast towards mouse
-			glm::distance(StatesAndUIApp::worldMousePos, m_player->GetPosition()), 
+			60.f, //glm::distance(StatesAndUIApp::worldMousePos, m_player->GetPosition()), 
 			pointOfContact);
 
 		if (po) // if legal grapple point, commence grapple
 		{
 			grapplePoint = pointOfContact;
-
-			m_grapple = new Spring(m_player, nullptr, 2.5f, 0.f, 0.3f, glm::vec2(0), grapplePoint);
+			Rigidbody* rb = dynamic_cast<Rigidbody*>(po);
+			//									strength, damping, restLength
+			m_grapple = new Spring(m_player, rb, 4.f, 0.f, 0.3f, glm::vec2(0), glm::vec2(0));
+			
 			m_physicsScene->AddActor(m_grapple);
 
 			isGrappling = true;
 		}
 	}
+	// Try to release grapple
 	else if(m_input->isMouseButtonUp(aie::INPUT_MOUSE_BUTTON_LEFT) && isGrappling)
 	{
 		grapplePoint = glm::vec2(0);
@@ -144,7 +147,7 @@ std::vector<PhysicsObject*> GamePlayScene::GenerateLevel()
 			box->SetKinematic(true);
 			result.push_back(box);
 
-			box->SetAngularDrag(8.f); box->SetLinearDrag(2.f); box->SetElasticity(0.6f);
+			box->SetAngularDrag(8.f); box->SetLinearDrag(0.3f); box->SetElasticity(0.3f);
 		}
 		if (level[i] == 2)
 		{
@@ -153,7 +156,7 @@ std::vector<PhysicsObject*> GamePlayScene::GenerateLevel()
 			box->SetKinematic(false);
 			result.push_back(box);
 
-			box->SetAngularDrag(8.f); box->SetLinearDrag(2.f); box->SetElasticity(0.4f);
+			box->SetAngularDrag(8.f); box->SetLinearDrag(0.3f); box->SetElasticity(0.3f);
 		}
 		if (level[i] == 3)
 		{
