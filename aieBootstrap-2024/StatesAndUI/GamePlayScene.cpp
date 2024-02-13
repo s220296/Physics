@@ -64,7 +64,7 @@ void GamePlayScene::Update(float dt)
 		PhysicsObject* po = m_physicsScene->LineCast(m_player, // ignore the player
 			m_player->GetPosition(), // cast from player
 			StatesAndUIApp::worldMousePos - m_player->GetPosition(), // cast towards mouse
-			60.f, //glm::distance(StatesAndUIApp::worldMousePos, m_player->GetPosition()), 
+			45.f, //glm::distance(StatesAndUIApp::worldMousePos, m_player->GetPosition()), 
 			pointOfContact);
 
 		if (po) // if legal grapple point, commence grapple
@@ -72,8 +72,11 @@ void GamePlayScene::Update(float dt)
 			grapplePoint = pointOfContact;
 			Rigidbody* rb = dynamic_cast<Rigidbody*>(po);
 			//									strength, damping, restLength
-			m_grapple = new Spring(m_player, rb, 6.f, 0.f, 0.1f, glm::vec2(0), glm::vec2(0));
-			
+			if(rb)
+				m_grapple = new Spring(m_player, rb, 6.f, 0.f, 0.1f, glm::vec2(0), glm::vec2(0));
+			else
+				m_grapple = new Spring(m_player, nullptr, 6.f, 0.f, 0.1f, glm::vec2(0), grapplePoint);
+
 			m_physicsScene->AddActor(m_grapple);
 
 			isGrappling = true;
