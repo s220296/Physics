@@ -7,7 +7,7 @@ class Box : public Rigidbody
 public:
 	Box(glm::vec2 position, glm::vec2 velocity,
 		float mass, glm::vec2 extents, float orientation, glm::vec4 colour);
-	~Box();
+	~Box() {}
 
 	virtual void Draw(float alpha);
 
