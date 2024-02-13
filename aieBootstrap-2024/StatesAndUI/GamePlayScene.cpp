@@ -80,7 +80,7 @@ void GamePlayScene::Update(float dt)
 			grapplePoint = pointOfContact;
 			Rigidbody* rb = dynamic_cast<Rigidbody*>(po);
 			//									strength, damping, restLength
-			if(rb)
+			if(rb && !rb->IsKinematic())
 				m_grapple = new Spring(m_player, rb, 6.f, 0.f, 0.1f, glm::vec2(0), glm::vec2(0));
 			else
 				m_grapple = new Spring(m_player, nullptr, 6.f, 0.f, 0.1f, glm::vec2(0), grapplePoint);
@@ -119,7 +119,7 @@ void GamePlayScene::GenerateLevel()
 	m_levelObjects.clear();
 
 	m_level++;
-	if (m_level > 2)
+	if (m_level > 4)
 		m_level = 1;
 	
 	std::vector<std::string> sLevel;
@@ -223,6 +223,52 @@ std::vector<std::string> GamePlayScene::GetLevel(int level)
 		sLevel.push_back("10000000000011110001");
 		sLevel.push_back("10000000000023020001");
 		sLevel.push_back("10000000000020020001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("11111111111111111111");
+		break;
+
+	case 3:
+		sLevel.push_back("11111111111111111111");
+		sLevel.push_back("10000000040000000001");
+		sLevel.push_back("10010001000010001001");
+		sLevel.push_back("10020002000020002001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000222200000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000100001000100001");
+		sLevel.push_back("10000200002000200001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10010001000100010001");
+		sLevel.push_back("10020002000200020001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000100000001000001");
+		sLevel.push_back("10000200000002000001");
+		sLevel.push_back("10000000010000000001");
+		sLevel.push_back("10000000030000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("11111111111111111111");
+		break;
+
+	case 4:
+		sLevel.push_back("11111111111111111111");
+		sLevel.push_back("10000000004000000001");
+		sLevel.push_back("10202020202020202001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10202020202020202001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10202020202020202001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10202020202020202001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10202020201020202001");
+		sLevel.push_back("10000000003000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
 		sLevel.push_back("10000000000000000001");
 		sLevel.push_back("10000000000000000001");
 		sLevel.push_back("11111111111111111111");
