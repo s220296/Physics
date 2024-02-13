@@ -1,6 +1,7 @@
 #include "Rigidbody.h"
 #include "PhysicsScene.h"
 #include "iostream"
+#include "glm/glm.hpp"
 
 Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position, 
 	glm::vec2 velocity, float orientation, float mass) : PhysicsObject(shapeID)
@@ -87,7 +88,17 @@ void Rigidbody::FixedUpdate(glm::vec2 gravity, float timeStep)
 
 		if (GetShapeID() == BOX)
 		{
-			// round to nearest 90 degrees to stop jittering
+			const static float specificity = 0.06f;
+			const static float rad90 = glm::radians(90.f);
+			
+			for (int i = 0; i < 4; i++)
+			{
+				if (GetOrientatation() < i * rad90 + specificity &&
+					GetOrientatation() > i * rad90 - specificity)
+				{
+					m_orientation = i * rad90;
+				}
+			}
 		}
 	}
 }
@@ -222,4 +233,12 @@ void Rigidbody::TriggerEnter(PhysicsObject* actor2)
 void Rigidbody::TriggerExit(PhysicsObject* actor2)
 {
 
+}
+
+void Rigidbody::ResetPosition()
+{
+	m_velocity = glm::vec2(0);
+	m_position = glm::vec2(0);
+	m_angularVelocity = 0;
+	m_orientation = 0;
 }

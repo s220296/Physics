@@ -5,6 +5,7 @@
 #include "Input.h"
 
 #include <vector>
+#include <string>
 
 class PhysicsObject;
 class PhysicsScene;
@@ -20,9 +21,12 @@ public:
 	void Update(float dt) override;
 	void Draw() override;
 
-	std::vector<PhysicsObject*> GenerateLevel();
+	void GenerateLevel();
+	std::vector<std::string> GetLevel(int level);
 
 protected:
+	std::vector<PhysicsObject*> m_levelObjects;
+
 	PhysicsScene* m_physicsScene;
 
 	Circle* m_targetBody;
@@ -34,5 +38,7 @@ protected:
 
 	glm::vec2 grapplePoint;
 	aie::Input* m_input;
+
+	int m_level;
 };
 

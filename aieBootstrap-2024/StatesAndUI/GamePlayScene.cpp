@@ -23,7 +23,8 @@ void GamePlayScene::Enter()
 {
 	m_input = aie::Input::getInstance();
 
-	m_player = new Circle(vec2(0), vec2(0), 5.f, 4.f, vec4(1));
+	m_player = new Circle(vec2(0, 0), vec2(0), 5.f, 4.f, vec4(1));
+	m_player->SetElasticity(0.7f);
 
 	m_targetBody = new Circle(vec2(40, 40), vec2(0), 5.f, 3.5f, vec4(1, 0, 0, 1));
 
@@ -32,9 +33,7 @@ void GamePlayScene::Enter()
 			Circle* circle = dynamic_cast<Circle*>(other);
 			if (circle && circle == m_player)
 			{
-				// what happens when target is hit?
-				// probably just win
-				
+				GenerateLevel();
 			}
 		};
 
@@ -46,10 +45,9 @@ void GamePlayScene::Enter()
 	m_physicsScene->AddActor(m_player);
 	m_physicsScene->AddActor(m_targetBody);
 
-	std::vector<PhysicsObject*> levelObjects = GenerateLevel();
+	m_level = 1;
 
-	for (PhysicsObject* po : levelObjects)
-		m_physicsScene->AddActor(po);
+	GenerateLevel();
 
 	grapplePoint = glm::vec2(0);
 	isGrappling = false;
@@ -74,7 +72,7 @@ void GamePlayScene::Update(float dt)
 			grapplePoint = pointOfContact;
 			Rigidbody* rb = dynamic_cast<Rigidbody*>(po);
 			//									strength, damping, restLength
-			m_grapple = new Spring(m_player, rb, 4.f, 0.f, 0.3f, glm::vec2(0), glm::vec2(0));
+			m_grapple = new Spring(m_player, rb, 6.f, 0.f, 0.1f, glm::vec2(0), glm::vec2(0));
 			
 			m_physicsScene->AddActor(m_grapple);
 
@@ -99,31 +97,23 @@ void GamePlayScene::Draw()
 	m_physicsScene->Draw();
 }
 
-std::vector<PhysicsObject*> GamePlayScene::GenerateLevel()
+void GamePlayScene::GenerateLevel()
 {
+	for (PhysicsObject* po : m_levelObjects)
+		m_physicsScene->RemoveActor(po);
+
+	for (PhysicsObject* lo : m_levelObjects)
+		delete lo;
+
+	m_levelObjects.clear();
+
+	m_level++;
+	if (m_level > 2)
+		m_level = 1;
+	
 	std::vector<std::string> sLevel;
 
-	// 20 x 20
-	sLevel.push_back("11111111111111111111");
-	sLevel.push_back("10001000000000000001");
-	sLevel.push_back("10011100000000000001");
-	sLevel.push_back("10011100000000000001");
-	sLevel.push_back("10011100000000000001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000011110001");
-	sLevel.push_back("10000000000013010001");
-	sLevel.push_back("10000000000020010001");
-	sLevel.push_back("10000000000020010001");
-	sLevel.push_back("10000000000011110001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10010000000000000001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("10000000000000000001");
-	sLevel.push_back("11111111111111111111");
+	sLevel = GetLevel(m_level);
 
 	int* level = new int[400];
 
@@ -135,7 +125,6 @@ std::vector<PhysicsObject*> GamePlayScene::GenerateLevel()
 		}
 	}
 
-	std::vector<PhysicsObject*> result;
 	glm::vec2 blockSize = glm::vec2(9, 5);
 
 	for (int i = 0; i < 400; i++)
@@ -145,26 +134,112 @@ std::vector<PhysicsObject*> GamePlayScene::GenerateLevel()
 			Box* box = new Box(glm::vec2(blockSize.x * (i % 20) - (blockSize.x * 9), blockSize.y * (i / 20) - (blockSize.y * 9)),
 				glm::vec2(0), 5.f, blockSize * 0.5f, 0.f, glm::vec4(0, 1, 0, 1));
 			box->SetKinematic(true);
-			result.push_back(box);
+			m_levelObjects.push_back(box);
 
-			box->SetAngularDrag(8.f); box->SetLinearDrag(0.3f); box->SetElasticity(0.3f);
+			box->SetAngularDrag(8.f); box->SetLinearDrag(0.3f); box->SetElasticity(0.1f);
 		}
 		if (level[i] == 2)
 		{
 			Box* box = new Box(glm::vec2(blockSize.x * (i % 20) - (blockSize.x * 9), blockSize.y * (i / 20) - (blockSize.y * 9)),
 				glm::vec2(0), 5.f, glm::vec2(blockSize.y * 0.5f), 0.f, glm::vec4(1, 1, 0, 1));
 			box->SetKinematic(false);
-			result.push_back(box);
+			m_levelObjects.push_back(box);
 
-			box->SetAngularDrag(8.f); box->SetLinearDrag(0.3f); box->SetElasticity(0.3f);
+			box->SetAngularDrag(16.f); box->SetLinearDrag(0.3f); box->SetElasticity(0.3f);
 		}
 		if (level[i] == 3)
 		{
+			m_targetBody->ResetPosition();
 			m_targetBody->SetPosition(glm::vec2(blockSize.x * (i % 20) - (blockSize.x * 9), blockSize.y * (i / 20) - (blockSize.y * 9)));
+		}
+		if(level[i] == 4)
+		{
+			m_player->ResetPosition();
+			m_player->SetPosition(glm::vec2(blockSize.x * (i % 20) - (blockSize.x * 9), blockSize.y * (i / 20) - (blockSize.y * 9)));
 		}
 	}
 
 	delete[] level;
 
-	return result;
+	for (PhysicsObject* po : m_levelObjects)
+		m_physicsScene->AddActor(po);
+}
+
+std::vector<std::string> GamePlayScene::GetLevel(int level)
+{
+	std::vector<std::string> sLevel;
+
+	switch (level)
+	{
+	case 1:
+		sLevel.push_back("11111111111111111111");
+		sLevel.push_back("10001000400000200001");
+		sLevel.push_back("10011100000000200001");
+		sLevel.push_back("10011100000000200001");
+		sLevel.push_back("10011100000000000001");
+		sLevel.push_back("10022200000000000001");
+		sLevel.push_back("10002000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000100000000000001");
+		sLevel.push_back("10000100000011110001");
+		sLevel.push_back("10000100000013010001");
+		sLevel.push_back("10000000000020010001");
+		sLevel.push_back("10000000000020010001");
+		sLevel.push_back("10010001000011110001");
+		sLevel.push_back("10010001000000000001");
+		sLevel.push_back("10010001000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("11111111111111111111");
+		break;
+
+	case 2:
+		sLevel.push_back("11111111111111111111");
+		sLevel.push_back("10400000000000200001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("11111111111111100001");
+		sLevel.push_back("10000000000020200001");
+		sLevel.push_back("10000110000020000001");
+		sLevel.push_back("10000110000001111111");
+		sLevel.push_back("10000110000000000001");
+		sLevel.push_back("10000110000000000001");
+		sLevel.push_back("10000110000000000001");
+		sLevel.push_back("10000110000000000001");
+		sLevel.push_back("10000220000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000011110001");
+		sLevel.push_back("10000000000023020001");
+		sLevel.push_back("10000000000020020001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("11111111111111111111");
+		break;
+
+	default:
+		sLevel.push_back("11111111111111111111");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("11111111111111111111");
+		break;
+
+	}
+	return sLevel;
 }

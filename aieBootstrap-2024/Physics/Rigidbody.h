@@ -6,7 +6,7 @@
 #include <list>
 
 const static float MIN_LINEAR_THRESHOLD = 0.01f;
-const static float MIN_ANGULAR_THRESHOLD = 0.01f;
+const static float MIN_ANGULAR_THRESHOLD = 0.02f;
 
 class Rigidbody : public PhysicsObject {
 public:
@@ -56,6 +56,8 @@ public:
 
     void TriggerEnter(PhysicsObject* actor2);
     void TriggerExit(PhysicsObject* actor2);
+
+    void ResetPosition() override;
 
 public:
     std::function<void(PhysicsObject*)> collisionCallback;
