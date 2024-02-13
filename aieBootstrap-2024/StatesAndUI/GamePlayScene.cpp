@@ -34,6 +34,14 @@ void GamePlayScene::Enter()
 			if (circle && circle == m_player)
 			{
 				GenerateLevel();
+
+				grapplePoint = glm::vec2(0);
+				m_physicsScene->RemoveActor(m_grapple);
+
+				isGrappling = false;
+
+				delete m_grapple;
+				m_grapple = nullptr;
 			}
 		};
 
@@ -144,7 +152,7 @@ void GamePlayScene::GenerateLevel()
 		if (level[i] == 2)
 		{
 			Box* box = new Box(glm::vec2(blockSize.x * (i % 20) - (blockSize.x * 9), blockSize.y * (i / 20) - (blockSize.y * 9)),
-				glm::vec2(0), 5.f, glm::vec2(blockSize.y * 0.5f), 0.f, glm::vec4(1, 1, 0, 1));
+				glm::vec2(0), 5.f, glm::vec2(blockSize.y * 0.4f), 0.f, glm::vec4(1, 1, 0, 1));
 			box->SetKinematic(false);
 			m_levelObjects.push_back(box);
 
