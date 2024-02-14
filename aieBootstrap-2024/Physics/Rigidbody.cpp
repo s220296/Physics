@@ -1,7 +1,8 @@
 #include "Rigidbody.h"
 #include "PhysicsScene.h"
-#include "iostream"
 #include "glm/glm.hpp"
+
+#include <iostream>
 
 Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position, 
 	glm::vec2 velocity, float orientation, float mass) : PhysicsObject(shapeID)

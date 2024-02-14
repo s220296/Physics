@@ -56,11 +56,6 @@ void StatesAndUIApp::update(float deltaTime) {
 
 	m_gameStateManager->Update(deltaTime);
 
-	if (input->wasKeyPressed(aie::INPUT_KEY_Q))
-		m_gameStateManager->ChangeGameState("Menu");
-	if (input->wasKeyPressed(aie::INPUT_KEY_E))
-		m_gameStateManager->ChangeGameState("Gameplay");
-
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();

@@ -72,17 +72,17 @@ void GamePlayScene::Update(float dt)
 		PhysicsObject* po = m_physicsScene->LineCast(m_player, // ignore the player
 			m_player->GetPosition(), // cast from player
 			StatesAndUIApp::worldMousePos - m_player->GetPosition(), // cast towards mouse
-			45.f, //glm::distance(StatesAndUIApp::worldMousePos, m_player->GetPosition()), 
-			pointOfContact);
+			45.f, // cast a maximum of 45 units
+			pointOfContact); // pass in pointOfContact reference
 
 		if (po) // if legal grapple point, commence grapple
 		{
 			grapplePoint = pointOfContact;
 			Rigidbody* rb = dynamic_cast<Rigidbody*>(po);
 			//									strength, damping, restLength
-			if(rb && !rb->IsKinematic())
+			if(rb && !rb->IsKinematic()) // if object is dyanmic
 				m_grapple = new Spring(m_player, rb, 6.f, 0.f, 0.1f, glm::vec2(0), glm::vec2(0));
-			else
+			else // else if object is static
 				m_grapple = new Spring(m_player, nullptr, 6.f, 0.f, 0.1f, glm::vec2(0), grapplePoint);
 
 			m_physicsScene->AddActor(m_grapple);
@@ -258,12 +258,12 @@ std::vector<std::string> GamePlayScene::GetLevel(int level)
 		sLevel.push_back("10000000000000000001");
 		sLevel.push_back("10202020202020202001");
 		sLevel.push_back("10000000000000000001");
-		sLevel.push_back("10202020202020202001");
-		sLevel.push_back("10000000000000000001");
-		sLevel.push_back("10202020202020202001");
-		sLevel.push_back("10000000000000000001");
 		sLevel.push_back("10202020201020202001");
 		sLevel.push_back("10000000003000000001");
+		sLevel.push_back("10202020202020202001");
+		sLevel.push_back("10000000000000000001");
+		sLevel.push_back("10202020200020202001");
+		sLevel.push_back("10000000000000000001");
 		sLevel.push_back("10000000000000000001");
 		sLevel.push_back("10000000000000000001");
 		sLevel.push_back("10000000000000000001");
