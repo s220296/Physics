@@ -60,9 +60,11 @@ public class Player : MonoBehaviour
 
     private IEnumerator SwingSword_CR()
     {
+        Vector3 initialPos = sword.transform.localPosition;
+
         Vector2 swingDirection = (_swingEndPos - _swingStartPos).normalized;
 
-        float timer = 1.5f;
+        float timer = 1f;
         // 1.6 to each side from middle of frame
         // rotate blade towards direction
 
@@ -100,6 +102,8 @@ public class Player : MonoBehaviour
         }
 
         _swinging = false;
+
+        sword.transform.localPosition = initialPos;
 
         yield return null;
     }
