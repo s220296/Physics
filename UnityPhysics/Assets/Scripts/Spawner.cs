@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.anyKey == true && _timer >= 0)
+        if(_timer >= 1)
         {
             Instantiate(prefab, transform.position, Quaternion.identity);
             _timer = 0;

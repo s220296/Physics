@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform hips = null;
     [SerializeField] private Transform sword = null;
 
+    // sword doesnt hit if not swinging, do this
+    private Sword _sword = null;
+
     public float forwardSpeed = 160f;
     public float rotationSpeed = 160f;
     public float pushPower = 2f;
@@ -29,6 +32,7 @@ public class Player : MonoBehaviour
     {
         _controller = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+        _sword = sword.GetComponent<Sword>();
     }
 
     // Update is called once per frame
@@ -51,7 +55,6 @@ public class Player : MonoBehaviour
             _swinging = true;
             _mouseDown = true;
             _swingStartPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            Debug.Log(_swingStartPos);
         }
         else if(Input.GetMouseButtonUp(0) && _swinging && _mouseDown)
         {
@@ -63,6 +66,8 @@ public class Player : MonoBehaviour
 
     private IEnumerator SwingSword_CR()
     {
+        _sword.EnableDestruction(true);
+
         Vector3 initialPos = sword.transform.localPosition;
 
         Vector2 swingDirection = (_swingEndPos - _swingStartPos).normalized;
@@ -85,27 +90,32 @@ public class Player : MonoBehaviour
             endPos += swingDirection;
         }
 
+        Vector2 offset = new Vector2(1.6f, 1f);
+
         sword.localPosition += new Vector3(
-            (edgePos.x / Screen.width) * 1.6f - 0.8f,
-            (edgePos.y / Screen.height) * 1f - 0.5f,
+            (edgePos.x / Screen.width) * offset.x - (offset.x * 0.5f),
+            (edgePos.y / Screen.height) * offset.y - (offset.y * 0.5f),
             0);
         // add offset to sword swing and double swing distance
         Vector3 finalPos = new Vector3(
-            (endPos.x / Screen.width) * 3.2f - 1.6f,
-            (endPos.y / Screen.height) * 2f,
+            (endPos.x / Screen.width) * (offset.x * 2f) - offset.x,
+            (endPos.y / Screen.height) * (offset.y * 2f),
             sword.localPosition.z);
 
-        Debug.Log("Starting edgePos: " + edgePos + " / endPos: " + endPos + " to create finalPos: " + finalPos);
+        float lingerTime = 0.1f;
 
-        while(timer > 0)
+        while(lingerTime > 0f)
         {
             sword.localPosition =
-                Vector3.MoveTowards(sword.localPosition, finalPos, 1.6f * 2f * Time.deltaTime);
+                Vector3.MoveTowards(sword.localPosition, finalPos, 7f * Time.deltaTime);
 
-            timer -= Time.deltaTime;
+            if (sword.localPosition == finalPos)
+                lingerTime -= Time.deltaTime;
 
             yield return null;
         }
+
+        _sword.EnableDestruction(false);
 
         sword.transform.localPosition = initialPos;
 

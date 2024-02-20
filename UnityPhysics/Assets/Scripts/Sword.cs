@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
 
 public class Sword : MonoBehaviour
 {
+    private bool _enableDestruction = false;
     // Update is called once per frame
     void Update()
     {
         
     }
 
+    public void EnableDestruction(bool enableDestruction) { _enableDestruction = enableDestruction; }
+
     private void OnTriggerEnter(Collider collision)
     {
-        if (!collision.gameObject.CompareTag("NPC")) return;
+        if (!collision.gameObject.CompareTag("NPC") || !_enableDestruction) return;
 
         CharacterJoint cj = null;
         NPC npc = null;
