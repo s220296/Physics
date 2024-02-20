@@ -19,9 +19,10 @@ public class Player : MonoBehaviour
     public float rotationSpeed = 160f;
     public float pushPower = 2f;
 
-    private Vector2 _swingStartPos;
-    private Vector2 _swingEndPos;
-    private bool _swinging;
+    private Vector2 _swingStartPos = Vector2.zero;
+    private Vector2 _swingEndPos = Vector2.zero;
+    private bool _swinging = false;
+    private bool _mouseDown = false;
 
     // Start is called before the first frame update
     void Start()
@@ -45,14 +46,16 @@ public class Player : MonoBehaviour
 
     private void SwingCheck()
     {
-        if(Input.GetMouseButtonDown(0) && !_swinging)
+        if(Input.GetMouseButtonDown(0) && !_swinging && !_mouseDown)
         {
             _swinging = true;
+            _mouseDown = true;
             _swingStartPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             Debug.Log(_swingStartPos);
         }
-        else if(Input.GetMouseButtonUp(0) && _swinging)
+        else if(Input.GetMouseButtonUp(0) && _swinging && _mouseDown)
         {
+            _mouseDown = false;
             _swingEndPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             StartCoroutine(SwingSword_CR());
         }
@@ -84,12 +87,15 @@ public class Player : MonoBehaviour
 
         sword.localPosition += new Vector3(
             (edgePos.x / Screen.width) * 1.6f - 0.8f,
-            (edgePos.y / Screen.height) * 1f,
+            (edgePos.y / Screen.height) * 1f - 0.5f,
             0);
         // add offset to sword swing and double swing distance
-        Vector3 finalPos = new Vector3((endPos.x / Screen.width) * 1.6f,
-            (endPos.y / Screen.height) * 1f,
+        Vector3 finalPos = new Vector3(
+            (endPos.x / Screen.width) * 3.2f - 1.6f,
+            (endPos.y / Screen.height) * 2f,
             sword.localPosition.z);
+
+        Debug.Log("Starting edgePos: " + edgePos + " / endPos: " + endPos + " to create finalPos: " + finalPos);
 
         while(timer > 0)
         {
@@ -101,11 +107,9 @@ public class Player : MonoBehaviour
             yield return null;
         }
 
-        _swinging = false;
-
         sword.transform.localPosition = initialPos;
 
-        yield return null;
+        _swinging = false;
     }
 }
 
