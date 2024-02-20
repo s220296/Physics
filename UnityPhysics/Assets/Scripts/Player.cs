@@ -1,3 +1,4 @@
+using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -70,10 +71,28 @@ public class Player : MonoBehaviour
         // lerp between two positions
         // rotate correctly
         Vector2 centerScreen = new Vector2(Screen.width / 2, Screen.height / 2);
+        Vector2 edgePos = centerScreen;
+        Vector2 endPos = centerScreen;
+        while(edgePos.x > 0 && edgePos.x < Screen.width
+            && edgePos.y > 0 && edgePos.y < Screen.height)
+        {
+            edgePos -= swingDirection;
+            endPos += swingDirection;
+        }
+
+        sword.localPosition = new Vector3(
+            (edgePos.x / Screen.width) * 1.6f,
+            (edgePos.y / Screen.height) * 1f,
+            sword.localPosition.z);
+
+        Vector3 finalPos = new Vector3((endPos.x / Screen.width) * 1.6f,
+            (endPos.y / Screen.height) * 1f,
+            sword.localPosition.z);
 
         while(timer > 0)
         {
-
+            sword.localPosition =
+                Vector3.MoveTowards(sword.localPosition, endPos, 1.6f * 2f * Time.deltaTime);
 
             timer -= Time.deltaTime;
 
