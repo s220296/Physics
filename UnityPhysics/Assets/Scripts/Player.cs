@@ -65,6 +65,10 @@ public class Player : MonoBehaviour
         // 1.6 to each side from middle of frame
         // rotate blade towards direction
 
+        // Get where sword should start outside of frame, begin there
+        // Same for end of sword swing
+        // lerp between two positions
+        // rotate correctly
         Vector2 centerScreen = new Vector2(Screen.width / 2, Screen.height / 2);
 
         while(timer > 0)
