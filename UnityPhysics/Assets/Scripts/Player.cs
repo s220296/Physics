@@ -80,11 +80,11 @@ public class Player : MonoBehaviour
             endPos += swingDirection;
         }
 
-        sword.localPosition = new Vector3(
-            (edgePos.x / Screen.width) * 1.6f,
+        sword.localPosition += new Vector3(
+            (edgePos.x / Screen.width) * 1.6f - 0.8f,
             (edgePos.y / Screen.height) * 1f,
-            sword.localPosition.z);
-
+            0);
+        // add offset to sword swing and double swing distance
         Vector3 finalPos = new Vector3((endPos.x / Screen.width) * 1.6f,
             (endPos.y / Screen.height) * 1f,
             sword.localPosition.z);
@@ -92,7 +92,7 @@ public class Player : MonoBehaviour
         while(timer > 0)
         {
             sword.localPosition =
-                Vector3.MoveTowards(sword.localPosition, endPos, 1.6f * 2f * Time.deltaTime);
+                Vector3.MoveTowards(sword.localPosition, finalPos, 1.6f * 2f * Time.deltaTime);
 
             timer -= Time.deltaTime;
 
