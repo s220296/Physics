@@ -12,10 +12,15 @@ public class Spawner : MonoBehaviour
     {
         if(_timer >= 1)
         {
-            Instantiate(prefab, transform.position, Quaternion.identity);
+            Spawn();
             _timer = 0;
         }
 
         _timer += Time.deltaTime;
+    }
+
+    public void Spawn()
+    {
+        Instantiate(prefab, transform.position, Quaternion.identity);
     }
 }
