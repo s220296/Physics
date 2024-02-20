@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -9,12 +10,17 @@ public class Player : MonoBehaviour
     private CharacterController _controller = null;
     private Animator _animator = null;
 
-    public Transform hips = null;
     private bool _isRagdolling = false;
+    [SerializeField] private Transform hips = null;
+    [SerializeField] private Transform sword = null;
 
     public float forwardSpeed = 160f;
     public float rotationSpeed = 160f;
     public float pushPower = 2f;
+
+    private Vector2 _swingStartPos;
+    private Vector2 _swingEndPos;
+    private bool _swinging;
 
     // Start is called before the first frame update
     void Start()
@@ -33,26 +39,46 @@ public class Player : MonoBehaviour
         if (_controller.enabled) transform.Rotate(transform.up, horizontal * rotationSpeed * Time.deltaTime);
         if (_animator.enabled) _animator.SetFloat("Speed", vertical * forwardSpeed * Time.deltaTime);
 
-        if(Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            if (!_isRagdolling)
-            {
-                _animator.enabled = false;
-                _controller.enabled = false;
-                _isRagdolling = true;
-            }
-            else
-            {
-                transform.position = new Vector3(
-                    hips.transform.position.x,
-                    transform.position.y,
-                    hips.transform.position.z);
+        SwingCheck();
+    }
 
-                _animator.enabled = true;
-                _controller.enabled = true;
-                _isRagdolling = false;
-            }
+    private void SwingCheck()
+    {
+        if(Input.GetMouseButtonDown(0) && !_swinging)
+        {
+            _swinging = true;
+            _swingStartPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            Debug.Log(_swingStartPos);
+        }
+        else if(Input.GetMouseButtonUp(0) && _swinging)
+        {
+            _swingEndPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            StartCoroutine(SwingSword_CR());
         }
     }
 
+    private IEnumerator SwingSword_CR()
+    {
+        Vector2 swingDirection = (_swingEndPos - _swingStartPos).normalized;
+
+        float timer = 1.5f;
+        // 1.6 to each side from middle of frame
+        // rotate blade towards direction
+
+        Vector2 centerScreen = new Vector2(Screen.width / 2, Screen.height / 2);
+
+        while(timer > 0)
+        {
+
+
+            timer -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        _swinging = false;
+
+        yield return null;
+    }
 }
+

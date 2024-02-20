@@ -10,25 +10,23 @@ public class Sword : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
+        if (!collision.gameObject.CompareTag("NPC")) return;
+
         CharacterJoint cj = null;
-        Animator an = null;
-        CharacterController cc = null;
+        NPC npc = null;
+
         if(collision.gameObject.TryGetComponent<CharacterJoint>(out cj) && 
-            collision.gameObject.name != "Spine2")
+            collision.gameObject.name != "Spine2") // would be better to use tags
+                                                   // if having multiple models
         {
             cj.breakForce = 1f;
         }
-        an = collision.gameObject.GetComponentInParent<Animator>();
-        if(an != null)
+        npc = collision.gameObject.GetComponentInParent<NPC>();
+        if(npc != null)
         {
-            an.enabled = false;
-        }
-        cc = collision.gameObject.GetComponentInParent<CharacterController>();
-        if(cc != null)
-        {
-            cc.enabled = false;
+            npc.Kill();
         }
     }
 }
