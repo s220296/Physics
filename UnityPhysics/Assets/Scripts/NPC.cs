@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class NPC : MonoBehaviour
 {
+    protected static Transform playerTransform = null;
+
     private Animator _animator = null;
     private NavMeshAgent _navAgent = null;
 
@@ -14,12 +16,13 @@ public class NPC : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _navAgent = GetComponent<NavMeshAgent>();
+        playerTransform = FindObjectOfType<Player>().transform;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if(!_isDead) _navAgent.SetDestination(Vector3.zero);
+        if(!_isDead) _navAgent.SetDestination(playerTransform.position);
     }
 
     public void Kill()
