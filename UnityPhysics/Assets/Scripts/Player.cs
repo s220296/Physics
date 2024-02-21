@@ -46,6 +46,20 @@ public class Player : MonoBehaviour
         if (_animator.enabled) _animator.SetFloat("Speed", vertical * forwardSpeed * Time.deltaTime);
 
         SwingCheck();
+        InspectCheck();
+    }
+
+    private void InspectCheck()
+    {
+        if(Input.GetMouseButtonDown(1)) // if right click, shoot ray and get name of object clicked on
+        {
+            RaycastHit hit;
+            bool rayHit = Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0)), out hit, 100f);
+            if(rayHit)
+            {
+                // Set UI text to hit.name
+            }
+        }
     }
 
     private void SwingCheck()
