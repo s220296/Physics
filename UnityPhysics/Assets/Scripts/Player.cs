@@ -8,8 +8,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class Player : MonoBehaviour
 {
-    private CharacterController _controller = null;
     private Animator _animator = null;
+    private CharacterController _controller = null;
 
     private bool _isRagdolling = false;
     [SerializeField] private Transform hips = null;
@@ -30,9 +30,9 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _controller = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         _sword = sword.GetComponent<Sword>();
+        _controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -41,8 +41,8 @@ public class Player : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
-        if (_controller.enabled) _controller.SimpleMove(transform.up * Time.deltaTime);
-        if (_controller.enabled) transform.Rotate(transform.up, horizontal * rotationSpeed * Time.deltaTime);
+        if (!_isRagdolling) _controller.SimpleMove(transform.forward * (vertical * Time.deltaTime));
+        if (!_isRagdolling) transform.Rotate(transform.up, horizontal * rotationSpeed * Time.deltaTime);
         if (_animator.enabled) _animator.SetFloat("Speed", vertical * forwardSpeed * Time.deltaTime);
 
         SwingCheck();
@@ -60,7 +60,8 @@ public class Player : MonoBehaviour
         {
             _mouseDown = false;
             _swingEndPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            StartCoroutine(SwingSword_CR());
+            if (Vector2.Distance(_swingStartPos, _swingEndPos) > 0.3f) StartCoroutine(SwingSword_CR());
+            else _swinging = false;
         }
     }
 
@@ -72,7 +73,6 @@ public class Player : MonoBehaviour
 
         Vector2 swingDirection = (_swingEndPos - _swingStartPos).normalized;
 
-        float timer = 1f;
         // 1.6 to each side from middle of frame
         // rotate blade towards direction
 
