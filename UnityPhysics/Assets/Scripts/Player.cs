@@ -57,6 +57,7 @@ public class Player : MonoBehaviour
             bool rayHit = Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0)), out hit, 100f);
             if(rayHit)
             {
+                Debug.Log(hit.collider.name);
                 // Set UI text to hit.name
             }
         }
