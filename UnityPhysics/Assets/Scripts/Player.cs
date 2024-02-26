@@ -2,6 +2,7 @@ using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour
     private bool _isRagdolling = false;
     [SerializeField] private Transform hips = null;
     [SerializeField] private Transform sword = null;
+    [SerializeField] private TextMeshProUGUI raycastText = null;
 
     // sword doesnt hit if not swinging, do this
     private Sword _sword = null;
@@ -26,6 +28,8 @@ public class Player : MonoBehaviour
     private Vector2 _swingEndPos = Vector2.zero;
     private bool _swinging = false;
     private bool _mouseDown = false;
+
+    private Coroutine _coroutine = null;
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +53,23 @@ public class Player : MonoBehaviour
         InspectCheck();
     }
 
+    private IEnumerator TextHideTimer_CR()
+    {
+        float timer = 3.5f;
+
+        while(timer > 0)
+        {
+            timer -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        if(raycastText)
+            raycastText.text = "";
+
+        yield return null;
+    }
+
     private void InspectCheck()
     {
         if(Input.GetMouseButtonDown(1)) // if right click, shoot ray and get name of object clicked on
@@ -57,8 +78,21 @@ public class Player : MonoBehaviour
             bool rayHit = Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0)), out hit, 100f);
             if(rayHit)
             {
-                Debug.Log(hit.collider.name);
-                // Set UI text to hit.name
+                if (raycastText)
+                {
+                    if(_coroutine != null)
+                        StopCoroutine(_coroutine);
+
+                    raycastText.text = hit.collider.name;
+
+                    HingeJoint joint = hit.collider.GetComponent<HingeJoint>();
+                    if(joint)
+                    {
+                        joint.useMotor = !joint.useMotor;
+                    }
+
+                    _coroutine = StartCoroutine(TextHideTimer_CR());
+                }
             }
         }
     }

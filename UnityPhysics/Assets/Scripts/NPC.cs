@@ -12,6 +12,8 @@ public class NPC : MonoBehaviour
 
     private bool _isDead = false;
 
+    [SerializeField] private float _deathDespawnTimer = 20f;
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -31,6 +33,6 @@ public class NPC : MonoBehaviour
         _isDead = true;
         _navAgent.isStopped = true;
 
-        Destroy(gameObject, 5f);
+        Destroy(gameObject, _deathDespawnTimer);
     }
 }

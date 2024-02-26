@@ -17,8 +17,6 @@ public class MovingPlatform : MonoBehaviour
             while (_playerTransform.parent != null)
                 _playerTransform = _playerTransform.parent;
 
-            Debug.Log(_playerTransform.name);
-
             _playerOnPlatform = true;
         }
     }
@@ -26,7 +24,6 @@ public class MovingPlatform : MonoBehaviour
     private void FixedUpdate()
     {
         Vector3 positionDelta = transform.position - _oldPosition;
-        Debug.Log(positionDelta);
 
         if (_playerOnPlatform)
             _playerTransform.position += positionDelta;
