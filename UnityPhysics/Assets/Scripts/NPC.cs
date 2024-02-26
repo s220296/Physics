@@ -30,5 +30,7 @@ public class NPC : MonoBehaviour
         _animator.enabled = false;
         _isDead = true;
         _navAgent.isStopped = true;
+
+        Destroy(gameObject, 5f);
     }
 }
