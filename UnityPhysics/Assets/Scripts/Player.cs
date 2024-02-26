@@ -13,7 +13,6 @@ public class Player : MonoBehaviour
     private CharacterController _controller = null;
 
     private bool _isRagdolling = false;
-    [SerializeField] private Transform hips = null;
     [SerializeField] private Transform sword = null;
     [SerializeField] private TextMeshProUGUI raycastText = null;
 
